@@ -11,3 +11,6 @@ Advent of Code is a little programming puzzle game describing itself:
 
 Read more about Advent of Code [here](http://adventofcode.com/2018/about). You can start playing by going to [this](http://adventofcode.com/2018) website and signing in with Github.
 
+## Versioning
+
+This project is versioned vDAY.PUZZLE.REVISION
