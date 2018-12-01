@@ -42,7 +42,7 @@ func part1(s *bufio.Scanner) {
 	for s.Scan() {
 		v := calcValue(s.Text())
 		result += v
-		fmt.Printf("Sum: %d\t, Value; %d\n", result, v)
+		fmt.Printf("Sum: %d,\tValue: %d\n", result, v)
 	}
 	fmt.Printf("Result: %d\n", result)
 }
