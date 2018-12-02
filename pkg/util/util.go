@@ -2,6 +2,7 @@ package util
 
 import (
 	"bufio"
+	"fmt"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/version"
 	"os"
 )
@@ -15,7 +16,7 @@ func CheckErr(e error) {
 }
 
 func CheckArgs() {
-	println("Verison:\t" + version.Str)
+	fmt.Println("Verison:\t" + version.Str)
 	if len(os.Args) < 3 {
 		println("Usage: ./bin part input\nPart is 1 or 2\ninput is the path to the input file")
 		os.Exit(1)
