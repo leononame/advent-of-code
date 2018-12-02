@@ -44,7 +44,7 @@ func part1(input *[]string) {
 	}
 	fmt.Println("Result: ")
 	fmt.Println(counter)
-	fmt.Printf("Hash: %d", hash)
+	fmt.Printf("Hash: %d\n", hash)
 }
 
 func countLetters(line string) map[int]struct{} {
