@@ -3,31 +3,21 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/version"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
 	"os"
 	"strconv"
 )
 
-func checkErr(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
 func main() {
-	println("Verison:\t" + version.Str)
+	util.CheckArgs()
 	println("Challenge:\t2018-01")
 
-	if len(os.Args) < 3 {
-		println("Usage: ./bin part input\nPart is 1 or 2\ninput is the path to the input file")
-		os.Exit(1)
-	}
 	part, err := strconv.Atoi(os.Args[1])
-	checkErr(err)
+	util.CheckErr(err)
 
 	path := os.Args[2]
 	f, err := os.Open(path)
-	checkErr(err)
+	util.CheckErr(err)
 
 	s := bufio.NewScanner(f)
 	if part == 1 {
@@ -81,7 +71,7 @@ func exists(slice []int, val int) bool {
 
 func calcValue(line string) int {
 	v, err := strconv.Atoi(line[1:])
-	checkErr(err)
+	util.CheckErr(err)
 	if line[0] == '-' {
 		v = -v
 	}
