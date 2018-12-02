@@ -1,6 +1,7 @@
 package util
 
 import (
+	"bufio"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/version"
 	"os"
 )
@@ -19,4 +20,17 @@ func CheckArgs() {
 		println("Usage: ./bin part input\nPart is 1 or 2\ninput is the path to the input file")
 		os.Exit(1)
 	}
+}
+
+func GetInput() *[]string {
+	path := os.Args[2]
+	f, err := os.Open(path)
+	CheckErr(err)
+
+	s := bufio.NewScanner(f)
+	var lines []string
+	for s.Scan() {
+		lines = append(lines, s.Text())
+	}
+	return &lines
 }
