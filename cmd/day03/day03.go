@@ -71,7 +71,7 @@ func calcCoordinates(r rectangle) []coordinate {
 	return cs
 }
 
-func part1(input []string) {
+func calcCoordinateCounts(input []string) map[coordinate]int {
 	counter := make(map[coordinate]int)
 	rs := parseInput(input)
 	for _, r := range *rs {
@@ -80,10 +80,15 @@ func part1(input []string) {
 			counter[c]++
 		}
 	}
+	return counter
+}
+
+func part1(input []string) {
+	counts := calcCoordinateCounts(input)
 
 	// count coordinates with at least double count
 	c := 0
-	for _, v := range counter {
+	for _, v := range counts {
 		if v > 1 {
 			c++
 		}
@@ -93,5 +98,21 @@ func part1(input []string) {
 }
 
 func part2(input []string) {
+	counts := calcCoordinateCounts(input)
+	rs := parseInput(input)
+	for _, r := range *rs {
+		cs := calcCoordinates(r)
+		if checkCoordinagtes(&cs, &counts) {
+			fmt.Printf("Rectangle with ID %d has no overlaps!\n", r.id)
+		}
+	}
+}
 
+func checkCoordinagtes(cs *[]coordinate, data *map[coordinate]int) bool {
+	for _, c := range *cs {
+		if (*data)[c] != 1 {
+			return false
+		}
+	}
+	return true
 }
