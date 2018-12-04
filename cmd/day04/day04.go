@@ -26,6 +26,8 @@ func main() {
 	input := util.GetInput("input/day04")
 	sort.Strings(input)
 	part1(input)
+	fmt.Println()
+	part2(input)
 }
 
 type guardData map[date]*[60]int
@@ -42,7 +44,7 @@ func (gd *guardData) calcMinutesAsleep() int {
 	return sum
 }
 
-func (gd *guardData) calcBestMinute() int {
+func (gd *guardData) calcBestMinute() (minute int, value int) {
 	sumByMinute := [60]int{}
 	for _, day := range *gd {
 		for minute, isAsleep := range day {
@@ -57,7 +59,7 @@ func (gd *guardData) calcBestMinute() int {
 			maxIdx = i
 		}
 	}
-	return maxIdx
+	return maxIdx, max
 }
 
 func parseData(input []string) map[int]guardData {
@@ -138,7 +140,25 @@ func part1(input []string) {
 		}
 	}
 	gd := data[maxID]
-	bestMinute := gd.calcBestMinute()
+	bestMinute, _ := gd.calcBestMinute()
 	fmt.Printf("Part 1: Best guard is id %d.\nThey fell asleep for a total of %d minutes.\n", maxID, max)
 	fmt.Printf("The best minute to sneak through is %d.\nThe product of m and g is %d.\n", bestMinute, bestMinute*maxID)
+}
+
+func part2(input []string) {
+	data := parseData(input)
+
+	max := 0
+	maxID := 0
+	maxMinute := 0
+	for g, d := range data {
+		bm, v := d.calcBestMinute()
+		if v > max {
+			max = v
+			maxID = g
+			maxMinute = bm
+		}
+	}
+	fmt.Printf("Part 2: The guard that is most frequently asleep on the same minute is guard #%d.\n", maxID)
+	fmt.Printf("He spent minute %d asleep on %d days. The product of the minute and the guard ID is %d.\n", maxMinute, max, maxMinute*maxID)
 }
