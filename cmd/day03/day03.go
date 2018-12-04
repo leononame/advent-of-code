@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
-	"os"
 	"regexp"
 	"strconv"
 )
@@ -26,12 +25,12 @@ type rectangle struct {
 }
 
 func main () {
-	util.CheckArgs()
 	fmt.Println("Challenge:\t2018-03")
-	input := util.GetInput()
+	input := util.GetInput("input/day03")
 
 	// Run function
-	parts[os.Args[1]](*input)
+	part1(*input)
+	part2(*input)
 }
 
 func parseInput(input []string) *[]rectangle {

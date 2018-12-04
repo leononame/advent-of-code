@@ -3,30 +3,24 @@ package main
 import (
 	"fmt"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
-	"os"
 	"strings"
 )
 
 var alphabet [26]string
-var parts = map[string]func([]string){
-	"1": part1,
-	"2": part2,
-}
 
 func main() {
-	util.CheckArgs()
 	fmt.Println("Challenge:\t2018-02")
 
-	input := util.GetInput()
+	input := util.GetInput("input/day02")
 
 	// Build the alphabet lower case
 	for i := 0; i < 26; i++ {
 		alphabet[i] = string(i+97)
 	}
 
-
 	// Run function
-	parts[os.Args[1]](*input)
+	part1(*input)
+	part2(*input)
 }
 
 
@@ -45,9 +39,9 @@ func part1(input []string) {
 	for _, v := range counter {
 		hash *= v
 	}
-	fmt.Println("Result: ")
+	fmt.Printf("Resulting counts:: ")
 	fmt.Println(counter)
-	fmt.Printf("Hash: %d\n", hash)
+	fmt.Printf("Result part 1: %d\n", hash)
 }
 
 func countLetters(line string) map[int]struct{} {

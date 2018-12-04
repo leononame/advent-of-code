@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
 	"os"
@@ -9,50 +8,32 @@ import (
 )
 
 func main() {
-	util.CheckArgs()
-	println("Challenge:\t2018-01")
+	fmt.Println("Challenge:\t2018-01")
 
-	part, err := strconv.Atoi(os.Args[1])
-	util.CheckErr(err)
-
-	path := os.Args[2]
-	f, err := os.Open(path)
-	util.CheckErr(err)
-
-	s := bufio.NewScanner(f)
-	if part == 1 {
-		part1(s)
-	} else {
-		part2(s)
-	}
+	input := util.GetInput("input/day01")
+	part1(*input)
+	part2(*input)
 }
 
-func part1(s *bufio.Scanner) {
+func part1(input []string) {
 	result := 0
-	for s.Scan() {
-		v := calcValue(s.Text())
+	for _, l := range input {
+		v := calcValue(l)
 		result += v
-		fmt.Printf("Sum: %d,\tValue: %d\n", result, v)
 	}
-	fmt.Printf("Result: %d\n", result)
+	fmt.Printf("Result part 1: %d\n", result)
 }
 
-func part2(s *bufio.Scanner) {
-	var lines []string
+func part2(lines []string) {
 	var freqs []int
 	result := 0
-
-	for s.Scan() {
-		lines = append(lines, s.Text())
-	}
 
 	for {
 		for _, l := range lines {
 			v := calcValue(l)
 			result += v
-			fmt.Printf("Current sum: %d\n", result)
 			if exists(freqs, result) {
-				fmt.Printf("Sum %d already found!\n", result)
+				fmt.Printf("Result part 2: %d!\n", result)
 				os.Exit(0)
 			}
 			freqs = append(freqs, result)
