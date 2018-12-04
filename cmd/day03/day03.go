@@ -2,15 +2,11 @@ package main
 
 import (
 	"fmt"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
 	"regexp"
 	"strconv"
-)
 
-var parts = map[string]func([]string){
-	"1": part1,
-	"2": part2,
-}
+	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
+)
 
 type coordinate struct {
 	x int
@@ -24,13 +20,13 @@ type rectangle struct {
 	coordinate
 }
 
-func main () {
+func main() {
 	fmt.Println("Challenge:\t2018-03")
 	input := util.GetInput("input/day03")
 
 	// Run function
-	part1(*input)
-	part2(*input)
+	part1(input)
+	part2(input)
 }
 
 func parseInput(input []string) *[]rectangle {

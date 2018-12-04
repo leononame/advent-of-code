@@ -13,7 +13,7 @@ func CheckErr(e error) {
 	}
 }
 
-func GetInput(path string) *[]string {
+func GetInput(path string) []string {
 	f, err := os.Open(path)
 	CheckErr(err)
 
@@ -22,5 +22,5 @@ func GetInput(path string) *[]string {
 	for s.Scan() {
 		lines = append(lines, s.Text())
 	}
-	return &lines
+	return lines
 }

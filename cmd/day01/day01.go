@@ -2,17 +2,18 @@ package main
 
 import (
 	"fmt"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
 	"os"
 	"strconv"
+
+	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
 )
 
 func main() {
 	fmt.Println("Challenge:\t2018-01")
 
 	input := util.GetInput("input/day01")
-	part1(*input)
-	part2(*input)
+	part1(input)
+	part2(input)
 }
 
 func part1(input []string) {

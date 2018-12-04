@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
 	"strings"
+
+	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
 )
 
 var alphabet [26]string
@@ -15,14 +16,13 @@ func main() {
 
 	// Build the alphabet lower case
 	for i := 0; i < 26; i++ {
-		alphabet[i] = string(i+97)
+		alphabet[i] = string(i + 97)
 	}
 
 	// Run function
-	part1(*input)
-	part2(*input)
+	part1(input)
+	part2(input)
 }
-
 
 // Part 1
 func part1(input []string) {
@@ -82,7 +82,7 @@ func findSharedLetters(s1, s2 string) string {
 
 func findMinPair(input []string) (int, int) {
 	for i, l := range input {
-		for j := i+1; j < len(input); j++ {
+		for j := i + 1; j < len(input); j++ {
 			if hamming(l, input[j]) == 1 {
 				return i, j
 			}
