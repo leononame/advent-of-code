@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
 )
@@ -11,8 +12,24 @@ func main() {
 	input := util.GetInput("input/day05")[0]
 
 	length := react(input)
+	fmt.Printf("Part 1 resulted in a deconstructed string of lenght: %d\n", length)
 
-	fmt.Printf("Part 1 resulted in a deconstructed string of lenght: %d", length)
+	min := len(input)
+	badChar := "a"
+	for i := 0x41; i < 0x5B; i++ {
+		cleaned := removeChar(input, i)
+		length := react(cleaned)
+		if length < min {
+			min = length
+			badChar = string(i)
+		}
+	}
+	fmt.Printf("For part 2, the best solution is removing the character %s. This results in a length of: %d\n", badChar, min)
+}
+
+func removeChar(s string, c int) string {
+	tmp := strings.Replace(s, string(c), "", -1)
+	return strings.Replace(tmp, string(c+0x20), "", -1)
 }
 
 func react(polymer string) int {
