@@ -21,6 +21,7 @@ func main() {
 		cs = append(cs, parseCoordinate(s))
 	}
 	part1(cs)
+	part2(cs)
 }
 
 func part1(cs []coordinate) {
@@ -32,6 +33,28 @@ func part1(cs []coordinate) {
 	removeBorders(sizes, grid)
 	c, size := getMax(sizes)
 	fmt.Println("Coordinate", data[c], "has the highest area with a total size of", size)
+}
+
+func part2(cs []coordinate) {
+	mx, my := findMax(cs)
+	count := 0
+	for x := 0; x < mx; x++ {
+		for y := 0; y < my; y++ {
+			if isValid(x, y, cs) {
+				count++
+			}
+		}
+	}
+	fmt.Println("The area of the safe region (part 2) is", count)
+}
+
+func isValid(x, y int, cs []coordinate) bool {
+	sum := 0
+	ref := coordinate{x: x, y: y}
+	for _, c := range cs {
+		sum += manhattan(ref, c)
+	}
+	return sum < 10000
 }
 
 func removeBorders(sizes map[int]int, grid [][]int) {
