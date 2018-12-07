@@ -1,4 +1,4 @@
-# Advent of Code
+# Advent of Code 2018, Golang
 
 **CAREFUL SPOILERS: This repo contains solutions to the Advent of Code game.**
 
