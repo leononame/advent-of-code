@@ -18,10 +18,47 @@ func main() {
 	fmt.Println("Challenge:\t2018-07")
 	input := util.GetInput("input/day07")
 	s := parse(input)
-	part1(s)
+	seq := part1(s)
+	s = parse(input)
+	part2(s, seq)
 }
 
-func part1(s sequence) {
+func part2(s sequence, order []string) {
+	pool := 15
+	tick := 0
+
+	finished := make(map[string]int)
+	for {
+		for k, v := range finished {
+			if v == tick {
+				s.nextStep(k)
+				pool++
+			}
+		}
+		if len(s.nodes) == 0 {
+			break
+		}
+
+		an := s.getAvailableNodes()
+		sort.Strings(an)
+
+		for i := 0; i < len(an) && pool > 0; i++ {
+			if finished[an[i]] > 0 {
+				continue
+			}
+			letter := an[i]
+			duration := 60 + int(letter[0]) - 64
+			finished[an[i]] = tick + duration
+			pool--
+		}
+		tick++
+	}
+
+	fmt.Println("The sequence for part 2 is ", strings.Join(s.result, ""))
+	fmt.Println("It would take", tick, "seconds")
+}
+
+func part1(s sequence) []string {
 	for {
 		an := s.getAvailableNodes()
 		if len(an) == 0 {
@@ -31,6 +68,7 @@ func part1(s sequence) {
 		s.nextStep(an[0])
 	}
 	fmt.Println("The correct sequence is", strings.Join(s.result, ""))
+	return s.result
 }
 
 func parse(input []string) sequence {
