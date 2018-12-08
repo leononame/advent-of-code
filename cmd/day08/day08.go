@@ -29,11 +29,31 @@ func main() {
 
 	t := parse(data)
 	part1(t)
+	part2(t)
 }
 
 func part1(t tree) {
 	n := calcMeta(t.root)
 	fmt.Println("Tree has a meta sum of", n)
+}
+
+func part2(t tree) {
+	v := calcValue(t.root)
+	fmt.Println("The root node has the value", v)
+}
+
+func calcValue(n *node) int {
+	if n.children == nil {
+		return calcMeta(n)
+	}
+	sum := 0
+	for _, m := range n.meta {
+		if m == 0 || m > len(n.children) {
+			continue
+		}
+		sum += calcValue(n.children[m-1])
+	}
+	return sum
 }
 
 func calcMeta(n *node) int {
