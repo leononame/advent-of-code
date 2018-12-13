@@ -15,7 +15,7 @@ type generation struct {
 }
 
 func (g *generation) sum() int {
-	s := 0
+	var s int
 	for i, v := range g.s {
 		if v == '#' {
 			s += i + g.index
@@ -35,6 +35,8 @@ func main() {
 	}
 	fmt.Println("Generation 20: ", generations[20].s)
 	fmt.Println("Total count: ", generations[20].sum())
+
+	fmt.Println("Generation 50000000000: ", part2(g))
 }
 
 func parseInput(input []string) generation {
@@ -71,5 +73,24 @@ func next(g generation) generation {
 	return generation{idx, n, g.rules}
 }
 
-// ###.......###.........#...###.....###.#....#.###..#...#....#...#.#.......#.#..............................###
-// ###.......###.........#...###.....###.#....#.###..#...#....#...#.#.......#.#..............................###
+func part2(g generation) int {
+	// Increment becomes constant at some point, just watch for it
+	diff, sum, count := 0, g.sum(), 0
+	for i := 1; ; i++ {
+		g = next(g)
+		s := g.sum()
+		d := s - sum
+		sum = s
+		if d == diff {
+			count++
+		} else {
+			count = 0
+			diff = d
+		}
+
+		// If for 20 iterations the diff between sums hasn't changed, it's steady
+		if count == 20 {
+			return s + (5e10-i)*d
+		}
+	}
+}
