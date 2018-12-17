@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"strconv"
 
@@ -11,25 +12,25 @@ import (
 func main() {
 	fmt.Println("Advent of Code 2018, ", version.Str)
 	fmt.Println("Challenge: 2018-14")
-	count, _ := strconv.Atoi(util.GetInput("input/day14")[0])
-	recipes := []int{3, 7}
-	e1, e2 := 0, 1
-	for len(recipes) < count+10 {
-		ne1, ne2 := recipes[e1], recipes[e2]
-		s := ne1 + ne2
-		// if s is greater than 9, it's in the 10-18 range. Append 1
-		if s > 9 {
-			recipes = append(recipes, 1)
-			s -= 10
+	input := util.GetInput("input/day14")[0]
+	count, _ := strconv.Atoi(input)
+
+	recipes := []byte{'3', '7'}
+	var e1, e2 = 0, 1
+	for i := 1; ; i++ {
+		for len(recipes) < i*(count+10) {
+			ne1, ne2 := recipes[e1]-'0', recipes[e2]-'0'
+			s := strconv.Itoa(int(ne1 + ne2))
+			recipes = append(recipes, s...)
+			// New indices
+			e1 = (e1 + int(ne1) + 1) % len(recipes)
+			e2 = (e2 + int(ne2) + 1) % len(recipes)
 		}
-		// Append s
-		recipes = append(recipes, s)
-		// New indices
-		e1 = (e1 + ne1 + 1) % len(recipes)
-		e2 = (e2 + ne2 + 1) % len(recipes)
+		p2 := bytes.Index(recipes, []byte(input))
+		if p2 != -1 {
+			fmt.Println("Part 2:", p2)
+			break
+		}
 	}
-	for _, v := range recipes[count : count+10] {
-		fmt.Print(v)
-	}
-	fmt.Println()
+	fmt.Println("Part 1:", string(recipes[count:count+10]))
 }
