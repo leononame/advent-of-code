@@ -1,10 +1,9 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"sort"
-
-	"github.com/juju/errors"
 
 	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/version"
@@ -66,18 +65,31 @@ func (p *plan) Swap(i, j int) {
 func (p *plan) Tick() error {
 	// Sort myself
 	sort.Sort(p)
-
-	for _, c := range p.carts {
+	var err error
+	for i, c := range p.carts {
+		if c == nil {
+			continue
+		}
+		// c.position == complex(112.0, 9.0)
 		delete(p.positions, c.position)
 		c.position += c.direction
 		if p.positions[c.position] != nil {
-			return errors.New(
-				fmt.Sprintf("Cart has crashed at position %f, %f", real(c.position), imag(c.position)))
+			// Remove carts
+			p.carts[i] = nil
+			p.carts[find(p.carts, p.positions[c.position])] = nil
+			delete(p.positions, c.position)
+			// Return position error, but only if first error
+			if err == nil {
+				err = errors.New(
+					fmt.Sprintf("Cart has crashed at position %d,%d", int(real(c.position)), int(imag(c.position))))
+			}
+		} else {
+			p.positions[c.position] = c
 		}
-		p.positions[c.position] = c
 		c.checkDir(p.track[c.position])
 	}
-	return nil
+	p.carts = removeNil(p.carts)
+	return err
 }
 
 func main() {
@@ -88,7 +100,17 @@ func main() {
 	for {
 		if err := p.Tick(); err != nil {
 			fmt.Println(err.Error())
-			return
+			break
+		}
+	}
+	// part 2
+	for {
+		err := p.Tick()
+		if err != nil && len(p.carts) == 1 {
+			fmt.Printf("The position of the last remaining cart is: %d,%d\n",
+				int(real(p.carts[0].position)),
+				int(imag(p.carts[0].position)),
+			)
 		}
 	}
 }
@@ -116,4 +138,21 @@ func parse(input []string) *plan {
 		}
 	}
 	return &plan{carts, track, positions}
+}
+
+func find(carts []*cart, c *cart) int {
+	for i, v := range carts {
+		if v == c {
+			return i
+		}
+	}
+	return -1
+}
+
+func removeNil(carts []*cart) []*cart {
+	ret := carts
+	for i := find(ret, nil); i != -1; i = find(ret, nil) {
+		ret = append(ret[:i], ret[i+1:]...)
+	}
+	return ret
 }
