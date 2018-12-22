@@ -9,7 +9,7 @@ import (
 
 func main() {
 	fmt.Println("Challenge:\t2018-05")
-	input := util.GetInput("input/day05")[0]
+	input := util.GetInput("input")[0]
 
 	length := react(input)
 	fmt.Printf("Part 1 resulted in a deconstructed string of lenght: %d\n", length)

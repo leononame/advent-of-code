@@ -16,7 +16,7 @@ type sequence struct {
 
 func main() {
 	fmt.Println("Challenge:\t2018-07")
-	input := util.GetInput("input/day07")
+	input := util.GetInput("input")
 	s := parse(input)
 	seq := part1(s)
 	s = parse(input)

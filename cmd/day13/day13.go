@@ -95,7 +95,7 @@ func (p *plan) Tick() error {
 func main() {
 	fmt.Println("Advent of Code 2018, ", version.Str)
 	fmt.Println("Challenge: 2018-13")
-	input := util.GetInput("input/day13")
+	input := util.GetInput("input")
 	p := parse(input)
 	for {
 		if err := p.Tick(); err != nil {

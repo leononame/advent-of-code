@@ -13,7 +13,7 @@ var id int
 func main() {
 	fmt.Println("Advent of Code 2018, ", version.Str)
 	fmt.Println("Challenge: 2018-11")
-	id, _ = strconv.Atoi(util.GetInput("input/day11")[0])
+	id, _ = strconv.Atoi(util.GetInput("input")[0])
 
 	var grid [][]int
 	grid = make([][]int, 300)

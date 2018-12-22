@@ -12,7 +12,7 @@ var alphabet [26]string
 func main() {
 	fmt.Println("Challenge:\t2018-02")
 
-	input := util.GetInput("input/day02")
+	input := util.GetInput("input")
 
 	// Build the alphabet lower case
 	for i := 0; i < 26; i++ {

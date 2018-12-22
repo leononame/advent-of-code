@@ -23,7 +23,7 @@ type hour struct {
 
 func main() {
 	fmt.Println("Challenge:\t2018-04")
-	input := util.GetInput("input/day04")
+	input := util.GetInput("input")
 	sort.Strings(input)
 	part1(input)
 	fmt.Println()

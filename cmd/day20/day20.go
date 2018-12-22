@@ -30,7 +30,7 @@ var doors = map[byte]byte{
 func main() {
 	fmt.Println("Advent of Code 2018, ", version.Str)
 	fmt.Println("Challenge: 2018-20")
-	input := util.GetInput("input/day20")[0]
+	input := util.GetInput("input")[0]
 
 	test("^WNE$", 3)
 	test("^ENWWW(NEEE|SSE(EE|N))$", 10)

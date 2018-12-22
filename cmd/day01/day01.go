@@ -11,7 +11,7 @@ import (
 func main() {
 	fmt.Println("Challenge:\t2018-01")
 
-	input := util.GetInput("input/day01")
+	input := util.GetInput("input")
 	part1(input)
 	part2(input)
 }

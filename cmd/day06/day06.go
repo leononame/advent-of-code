@@ -15,7 +15,7 @@ type coordinate struct {
 
 func main() {
 	fmt.Println("Challenge:\t2018-06")
-	input := util.GetInput("input/day06")
+	input := util.GetInput("input")
 	var cs []coordinate
 	for _, s := range input {
 		cs = append(cs, parseCoordinate(s))

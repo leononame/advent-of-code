@@ -12,7 +12,7 @@ import (
 func main() {
 	fmt.Println("Advent of Code 2018, ", version.Str)
 	fmt.Println("Challenge: 2018-14")
-	input := util.GetInput("input/day14")[0]
+	input := util.GetInput("input")[0]
 	count, _ := strconv.Atoi(input)
 
 	recipes := []byte{'3', '7'}

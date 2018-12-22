@@ -25,7 +25,7 @@ var opcodes = [16]operation{}
 func main() {
 	fmt.Println("Advent of Code 2018, ", version.Str)
 	fmt.Println("Challenge: 2018-16")
-	input := util.GetInput("input/day16")
+	input := util.GetInput("input")
 	cs, is := parse(input)
 	combinations := countAndCombine(cs)
 	mapOpcodes(cs, combinations)

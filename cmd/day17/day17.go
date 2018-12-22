@@ -144,8 +144,7 @@ func (l *layout) String() string {
 func main() {
 	fmt.Println("Advent of Code 2018, ", version.Str)
 	fmt.Println("Challenge: 2018-17")
-	input := util.GetInput("input/day17")
-	// input := util.GetInput("input/day17-test")
+	input := util.GetInput("input")
 	l := parse(input)
 	fmt.Println(l.minx, l.maxx, l.miny, l.maxy)
 	l.fill(newPoint(500, 0))

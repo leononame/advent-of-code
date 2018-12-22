@@ -22,7 +22,7 @@ type rectangle struct {
 
 func main() {
 	fmt.Println("Challenge:\t2018-03")
-	input := util.GetInput("input/day03")
+	input := util.GetInput("input")
 
 	// Run function
 	part1(input)

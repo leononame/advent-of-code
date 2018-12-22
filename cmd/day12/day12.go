@@ -27,7 +27,7 @@ func (g *generation) sum() int {
 func main() {
 	fmt.Println("Advent of Code 2018, ", version.Str)
 	fmt.Println("Challenge: 2018-12")
-	input := util.GetInput("input/day12")
+	input := util.GetInput("input")
 	g := parseInput(input)
 	generations := []generation{g}
 	for i := 0; i < 20; i++ {

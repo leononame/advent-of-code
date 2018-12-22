@@ -90,7 +90,7 @@ func (im *image) print() {
 func main() {
 	fmt.Println("Advent of Code 2018, ", version.Str)
 	fmt.Println("Challenge: 2018-10")
-	input := util.GetInput("input/day10")
+	input := util.GetInput("input")
 	im := parse(input)
 	im.tick()
 

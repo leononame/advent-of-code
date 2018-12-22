@@ -19,7 +19,7 @@ type tree struct {
 
 func main() {
 	fmt.Println("Challenge:\t2018-08")
-	input := util.GetInput("input/day08")[0]
+	input := util.GetInput("input")[0]
 	l := strings.Split(input, " ")
 	var data []int
 	for _, entry := range l {
