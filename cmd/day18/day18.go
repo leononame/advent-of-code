@@ -113,7 +113,7 @@ func (a *area) count(x, y int, acre byte) int {
 
 func main() {
 	fmt.Println("Advent of Code 2018, ", version.Str)
-	fmt.Println("Challenge: 2018-17")
+	fmt.Println("Challenge: 2018-18")
 	input := util.GetInput("input")
 	a := parse(input)
 	for a.tick() < 10 {
