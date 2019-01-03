@@ -23,17 +23,17 @@ func (c Classic) GetY() int {
 }
 
 func (c Classic) Up() geo.Pointer {
-	return &Classic{c.X, c.Y - 1}
+	return Classic{c.X, c.Y - 1}
 }
 
 func (c Classic) Down() geo.Pointer {
-	return &Classic{c.X, c.Y + 1}
+	return Classic{c.X, c.Y + 1}
 }
 
 func (c Classic) Left() geo.Pointer {
-	return &Classic{c.X - 1, c.Y}
+	return Classic{c.X - 1, c.Y}
 }
 
 func (c Classic) Right() geo.Pointer {
-	return &Classic{c.X + 1, c.Y}
+
 }
