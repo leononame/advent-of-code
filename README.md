@@ -2,6 +2,10 @@
 
 **CAREFUL SPOILERS: This repo contains solutions to the Advent of Code game.**
 
+I use AOC as a training. I'm new to go and still starting out as a dev. This game teaches me a lot of skills. I regularly check reddit for hints on how to solve this and also use [this](https://github.com/metalim/metalim.adventofcode.2018.go) great repo as a reference, as I'm not a great voodoo programmer myself (yet).
+
+Once I finished all the puzzles, I'm going to refactor this repo and include explanations for the puzzle solutions so others that are as stupid as me can have a little help.
+
 ## What is Advent of Code?
 
 Advent of Code is a little programming puzzle game describing itself:
