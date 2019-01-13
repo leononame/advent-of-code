@@ -35,5 +35,5 @@ func (c Classic) Left() geo.Pointer {
 }
 
 func (c Classic) Right() geo.Pointer {
-
+	return Classic{c.X + 1, c.Y}
 }
