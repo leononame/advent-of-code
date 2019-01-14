@@ -18,9 +18,10 @@ type Result struct {
 }
 
 type Config struct {
-	Input     []string
-	Logger    *logrus.Logger
-	Year, Day int
+	Input      []string
+	Logger     *logrus.Logger
+	SubCommand string
+	Year, Day  int
 }
 
 func Setup() *Config {
@@ -51,6 +52,10 @@ func Setup() *Config {
 		o.Logger.SetLevel(logrus.DebugLevel)
 	}
 	o.Year, o.Day = *year, *day
+
+	if getopt.NArgs() > 0 {
+		o.SubCommand = getopt.Args()[0]
+	}
 	return &o
 }
 

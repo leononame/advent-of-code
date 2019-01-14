@@ -8,6 +8,7 @@ import (
 
 	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day01"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day02"
 )
 
 func main() {
@@ -34,5 +35,6 @@ func main() {
 var runners = map[int]map[int]func(config *aoc.Config) aoc.Result{
 	2018: {
 		1: day01.Run,
+		2: day02.Run,
 	},
 }
