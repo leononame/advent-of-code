@@ -1,12 +1,12 @@
 package rect3
 
 import (
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo3"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo3/points3"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/geo/points3"
 )
 
 type Rectangle struct {
-	Min, Max geo3.Pointer
+	Min, Max geo.Pointer3
 }
 
 func (r Rectangle) LongestSide() int {
@@ -16,7 +16,7 @@ func (r Rectangle) LongestSide() int {
 	return max(dx, max(dy, dz))
 }
 
-func FromPointCloud(ps []geo3.Pointer) Rectangle {
+func FromPointCloud(ps []geo.Pointer3) Rectangle {
 	r := Rectangle{}
 	var minX, minY, minZ, maxX, maxY, maxZ int
 	for _, p := range ps {

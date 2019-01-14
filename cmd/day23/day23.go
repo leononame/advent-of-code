@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"gitlab.com/einfachst/dgserver/pkg/version"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/day23"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day23"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
 )
 

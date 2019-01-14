@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/day22"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day22"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/geo/points"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/version"

@@ -3,23 +3,23 @@ package day23
 import (
 	"fmt"
 
+	"gitlab.com/leononame/advent-of-code-2018/pkg/geo/points3"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/geo/rect3"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/geo3"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo3/points3"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo3/rect3"
 )
 
 type nanoBot struct {
 	r int
-	geo3.Pointer
+	geo3.Pointer3
 }
 
 type nanoBots []nanoBot
 
-func (n nanoBot) inRange(p geo3.Pointer) bool {
+func (n nanoBot) inRange(p geo3.Pointer3) bool {
 	return dist(n, p) <= n.r
 }
 
-func (n nanoBots) points() (points []geo3.Pointer) {
+func (n nanoBots) points() (points []geo3.Pointer3) {
 	for _, b := range n {
 		points = append(points, b)
 	}
@@ -128,7 +128,7 @@ func maxRange(bs []nanoBot) int {
 	return maxIdx
 }
 
-func dist(a, b geo3.Pointer) int {
+func dist(a, b geo3.Pointer3) int {
 	return abs(a.GetX()-b.GetX()) +
 		abs(a.GetY()-b.GetY()) +
 		abs(a.GetZ()-b.GetZ())
