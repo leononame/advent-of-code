@@ -4,19 +4,18 @@ import (
 	"container/heap"
 
 	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo/points"
 )
 
-func (t *target) path(from geo.Pointer, max int) {
+func (t *target) path(from geo.Point, max int) {
 	first := Item{pos: from}
 	pq := PriorityQueue{&first}
-	costs := make(map[geo.Pointer]int)
+	costs := make(map[geo.Point]int)
 	neighbours := t.enemy.cave.neighbours
-	path := make(map[geo.Pointer]geo.Pointer)
+	path := make(map[geo.Point]geo.Point)
 
 	for len(pq) > 0 {
 		current := heap.Pop(&pq).(*Item).pos
-		if points.Equal(current, t.pos) {
+		if current == t.pos {
 			t.distance = costs[current]
 			return
 		}
@@ -27,7 +26,7 @@ func (t *target) path(from geo.Pointer, max int) {
 			}
 			if c, ok := costs[n]; !ok || cost < c {
 				costs[n] = cost
-				next := Item{pos: n, priority: cost + points.Manhattan(t.pos, n)}
+				next := Item{pos: n, priority: cost + t.pos.Manhattan(n)}
 				heap.Push(&pq, &next)
 				path[n] = current
 			}
@@ -36,8 +35,8 @@ func (t *target) path(from geo.Pointer, max int) {
 	t.distance = max + 1
 }
 
-func reversePath(p geo.Pointer, path map[geo.Pointer]geo.Pointer) []geo.Pointer {
-	ps := []geo.Pointer{p}
+func reversePath(p geo.Point, path map[geo.Point]geo.Point) []geo.Point {
+	ps := []geo.Point{p}
 	for p, ok := path[p]; ok; p, ok = path[p] {
 		ps = append(ps, p)
 	}

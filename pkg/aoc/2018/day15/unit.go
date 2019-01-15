@@ -4,13 +4,12 @@ import (
 	"github.com/pkg/errors"
 
 	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo/points"
 )
 
 type unit struct {
 	hp      int
 	pow     int
-	pos     geo.Pointer
+	pos     geo.Point
 	t       rune
 	enemies *[]*unit
 	cave    *cave
@@ -18,7 +17,7 @@ type unit struct {
 }
 
 type target struct {
-	pos      geo.Pointer
+	pos      geo.Point
 	enemy    *unit
 	distance int
 }
@@ -49,9 +48,9 @@ func (u *unit) attack(enemy *unit) bool {
 	return false
 }
 
-func (u *unit) enemy(p geo.Pointer) *unit {
+func (u *unit) enemy(p geo.Point) *unit {
 	for _, e := range *u.enemies {
-		if points.Equal(e.pos, p) {
+		if e.pos == p {
 			return e
 		}
 	}
@@ -72,7 +71,7 @@ func (u *unit) selectEnemy(e1, e2 *unit) *unit {
 
 func (u *unit) enemyInReach() *unit {
 	var selected *unit
-	for _, n := range points.Neighbours(u.pos) {
+	for _, n := range u.pos.Neighbours() {
 		selected = u.selectEnemy(selected, u.enemy(n))
 	}
 	return selected
@@ -89,7 +88,7 @@ func (u *unit) findTargets() []target {
 }
 
 func (u *unit) selectTarget(ts []target) (target, error) {
-	best := target{distance: 10000, pos: points.NewClassic(0, 0)}
+	best := target{distance: 10000, pos: geo.Point{}}
 	for _, t := range ts {
 		t.path(u.pos, best.distance)
 		if t.distance < best.distance ||
@@ -124,7 +123,7 @@ func (u *unit) approach(t target) *unit {
 	// return u.moveTo(u.pos.Left())
 }
 
-func (u *unit) moveTo(p geo.Pointer) *unit {
+func (u *unit) moveTo(p geo.Point) *unit {
 	u.cave.layout[u.pos.GetY()][u.pos.GetX()] = floor
 	u.cave.layout[p.GetY()][p.GetX()] = u.t
 	u.pos = p

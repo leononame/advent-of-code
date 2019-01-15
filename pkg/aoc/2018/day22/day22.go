@@ -5,18 +5,17 @@ import (
 	"fmt"
 
 	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo/points"
 )
 
-func Run(input []string, c points.Constructor) {
-	m := parse(input, c)
+func Run(input []string) {
+	m := parse(input)
 	fmt.Println(m)
 	fmt.Println("Part 1:", m.calcRisk())
-	fmt.Println("Part 2:", part2(TraverseMap{m}, c))
+	fmt.Println("Part 2:", part2(TraverseMap{m}))
 }
 
-func part2(m TraverseMap, pointer points.Constructor) int {
-	first := Tile{Region: *m.get(pointer(0, 0)), tool: torch}
+func part2(m TraverseMap) int {
+	first := Tile{Region: *m.get(geo.Point{}), tool: torch}
 	pq := PriorityQueue{&Item{Tile: first}}
 	costs := make(map[Tile]int)
 	path := make(map[Tile]Tile)
@@ -24,14 +23,14 @@ func part2(m TraverseMap, pointer points.Constructor) int {
 	i := 0
 	for len(pq) > 0 {
 		current := heap.Pop(&pq).(*Item).Tile
-		if points.Equal(current.Location, m.Target) {
+		if current.Location == m.Target {
 			return costs[current]
 		}
 		for _, n := range m.searchNeighbours(current) {
 			cost := costs[current]
 			// If neighbour is target but no torch is equipped, movement cost is really high
 			// to prevent pathing
-			if points.Equal(n.Location, m.Target) && n.tool != torch {
+			if n.Location == m.Target && n.tool != torch {
 				cost += 9999
 			} else if n.tool != current.tool { // If tools are different, the cost is the change cost
 				cost += change
@@ -65,7 +64,7 @@ func reversePath(t Tile, path map[Tile]Tile) []Tile {
 	return ts
 }
 
-func distance(from, to geo.Pointer) int {
+func distance(from, to geo.Point) int {
 	return abs(from.GetX()-to.GetX()) + abs(from.GetY()-to.GetY())
 }
 
@@ -76,16 +75,16 @@ func abs(a int) int {
 	return a
 }
 
-func parse(input []string, c points.Constructor) *Map {
+func parse(input []string) *Map {
 	var depth, tx, ty int
 	fmt.Sscanf(input[0], "depth: %d", &depth)
 	fmt.Sscanf(input[1], "target: %d,%d", &tx, &ty)
-	m := Map{Depth: depth, Target: points.NewClassic(tx, ty)}
+	m := Map{Depth: depth, Target: geo.Point{tx, ty}}
 	mx, my := tx+overSize, ty+overSize
 	for y := 0; y < my; y++ {
 		m.Data = append(m.Data, []*Region{})
 		for x := 0; x < mx; x++ {
-			p := c(x, y)
+			p := geo.Point{x, y}
 			r := Region{Location: p}
 			r.Geological = m.calcGeo(p)
 			r.Erosion = (m.Depth + r.Geological) % 20183

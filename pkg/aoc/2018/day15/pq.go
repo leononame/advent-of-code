@@ -3,7 +3,7 @@ package day15
 import "gitlab.com/leononame/advent-of-code-2018/pkg/geo"
 
 type Item struct {
-	pos      geo.Pointer
+	pos      geo.Point
 	priority int
 	index    int
 }

@@ -4,24 +4,24 @@ import (
 	"fmt"
 
 	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo/points3"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo/rect3"
 )
 
 type nanoBot struct {
 	r int
-	geo.Pointer3
+	geo.Point3
 }
 
 type nanoBots []nanoBot
 
-func (n nanoBot) inRange(p geo.Pointer3) bool {
-	return dist(n, p) <= n.r
+func (n nanoBot) inRange(p geo.Point3) bool {
+	return n.Manhattan(p) <= n.r
 }
 
-func (n nanoBots) points() (points []geo.Pointer3) {
-	for _, b := range n {
-		points = append(points, b)
+func (n nanoBots) points() (points []geo.Point3) {
+	points = make([]geo.Point3, len(n))
+	for i, b := range n {
+		points[i] = b.Point3
+		// points = append(points, b.Point3)
 	}
 	return
 }
@@ -38,46 +38,46 @@ func part1(bots []nanoBot) {
 }
 
 func part2(bots nanoBots) {
-	origin := points3.NewClassic(0, 0, 0)
+	origin := geo.Point3{}
 	var maxCount, bestDistance int
 	bestPoint := origin
 	// expected: 129293598
-	r := rect3.FromPointCloud(bots.points())
+	r := geo.FromPointCloud(bots.points())
 	// Search tree
 	// See: https://www.reddit.com/r/adventofcode/comments/a8s17l/2018_day_23_solutions/ecf450e/https://www.reddit.com/r/adventofcode/comments/a8s17l/2018_day_23_solutions/ecf450e/
 	//
 	// First iteration is easily done by hand
 	size := r.LongestSide() / 2
-	r.Min = points3.NewClassic(
-		bestPoint.GetX()-size,
-		bestPoint.GetY()-size,
-		bestPoint.GetZ()-size)
-	r.Max = points3.NewClassic(
-		bestPoint.GetX()+size+1,
-		bestPoint.GetY()+size+1,
-		bestPoint.GetZ()+size+1)
+	r.Min = geo.Point3{
+		bestPoint.GetX() - size,
+		bestPoint.GetY() - size,
+		bestPoint.GetZ() - size}
+	r.Max = geo.Point3{
+		bestPoint.GetX() + size + 1,
+		bestPoint.GetY() + size + 1,
+		bestPoint.GetZ() + size + 1}
 	for ; size > 0; size /= 2 {
 		maxCount = 0
 		for x := r.Min.GetX(); x < r.Max.GetX(); x += size {
 			for y := r.Min.GetY(); y < r.Max.GetY(); y += size {
 				for z := r.Min.GetZ(); z < r.Max.GetZ(); z += size {
-					p := points3.NewClassic(x, y, z)
+					p := geo.Point3{x, y, z}
 					// Count the bots in range of the current cube
 					// Our reference point (variable p) is the center of the cube
 					// We count all bots that touch that cube, hence we increase
 					// the search radius by the current cube size
 					count := 0
 					for _, b := range bots {
-						if dist(b, p) < b.r+size {
+						if b.Manhattan(p) < b.r+size {
 							count++
 						}
 					}
 					if count > maxCount {
 						bestPoint = p
 						maxCount = count
-						bestDistance = dist(origin, p)
+						bestDistance = origin.Manhattan(p)
 					} else if count == maxCount {
-						d := dist(origin, p)
+						d := origin.Manhattan(p)
 						if d < bestDistance {
 							bestDistance = d
 							bestPoint = p
@@ -86,14 +86,14 @@ func part2(bots nanoBots) {
 				}
 			}
 		}
-		r.Min = points3.NewClassic(
-			bestPoint.GetX()-size,
-			bestPoint.GetY()-size,
-			bestPoint.GetZ()-size)
-		r.Max = points3.NewClassic(
-			bestPoint.GetX()+size+1,
-			bestPoint.GetY()+size+1,
-			bestPoint.GetZ()+size+1)
+		r.Min = geo.Point3{
+			bestPoint.GetX() - size,
+			bestPoint.GetY() - size,
+			bestPoint.GetZ() - size}
+		r.Max = geo.Point3{
+			bestPoint.GetX() + size + 1,
+			bestPoint.GetY() + size + 1,
+			bestPoint.GetZ() + size + 1}
 		fmt.Printf("Size: %d, Count: %d, Distance: %d, Location: %d,%d,%d\n",
 			size, maxCount, bestDistance,
 			bestPoint.GetX(),
@@ -108,7 +108,7 @@ func strength(bots []nanoBot, i int) int {
 	r := cur.r
 	strength := 0
 	for _, b := range bots {
-		if dist(cur, b) > r {
+		if cur.Manhattan(b.Point3) > r {
 			continue
 		}
 		strength++
@@ -128,25 +128,12 @@ func maxRange(bs []nanoBot) int {
 	return maxIdx
 }
 
-func dist(a, b geo.Pointer3) int {
-	return abs(a.GetX()-b.GetX()) +
-		abs(a.GetY()-b.GetY()) +
-		abs(a.GetZ()-b.GetZ())
-}
-
-func abs(a int) int {
-	if a < 0 {
-		return -a
-	}
-	return a
-}
-
 func parse(input []string) []nanoBot {
 	var bots []nanoBot
 	for _, l := range input {
 		var x, y, z, r int
 		fmt.Sscanf(l, "pos=<%d,%d,%d>, r=%d", &x, &y, &z, &r)
-		bots = append(bots, nanoBot{r, points3.NewClassic(x, y, z)})
+		bots = append(bots, nanoBot{r, geo.Point3{x, y, z}})
 	}
 	return bots
 }

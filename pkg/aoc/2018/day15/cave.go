@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo/points"
 )
 
 const (
@@ -73,9 +72,9 @@ func (c *cave) removeKilled(idx int) int {
 	return idx
 }
 
-func (c *cave) neighbours(p geo.Pointer) []geo.Pointer {
-	var ret []geo.Pointer
-	for _, n := range points.Neighbours(p) {
+func (c *cave) neighbours(p geo.Point) []geo.Point {
+	var ret []geo.Point
+	for _, n := range p.Neighbours() {
 		y, x := n.GetY(), n.GetX()
 		if x < 0 || y < 0 || y >= len(c.layout) || x >= len(c.layout[0]) {
 			continue
@@ -89,7 +88,7 @@ func (c *cave) neighbours(p geo.Pointer) []geo.Pointer {
 
 var count = 0
 
-func (c *cave) addUnit(pos geo.Pointer, t rune) {
+func (c *cave) addUnit(pos geo.Point, t rune) {
 	u := &unit{hp: 200, pos: pos, t: t, cave: c, id: count, pow: 3}
 	count++
 	c.all = append(c.all, u)

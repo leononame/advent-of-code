@@ -5,7 +5,6 @@ import (
 	"sort"
 
 	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo/points"
 )
 
 func Run(input []string) {
@@ -77,7 +76,7 @@ func hitpoints(us []*unit) int {
 }
 
 // Checks whether a and b are in reading order
-func readingOrder(a, b geo.Pointer) bool {
+func readingOrder(a, b geo.Point) bool {
 	return a.GetY() < b.GetY() || (a.GetY() == b.GetY() && a.GetX() < b.GetX())
 }
 
@@ -90,7 +89,7 @@ func parse(input []string) *cave {
 	}
 	for i := range input {
 		for j, el := range []rune(input[i]) {
-			pos := points.NewClassicPointer(j, i)
+			pos := geo.Point{j, i}
 			if el == goblin || el == elf {
 				c.addUnit(pos, el)
 			}

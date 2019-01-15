@@ -4,11 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo/points"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
 
 	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
-
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo/rect"
 )
 
 func Run(c *aoc.Config) (result aoc.Result) {
@@ -28,18 +26,18 @@ func Run(c *aoc.Config) (result aoc.Result) {
 
 type rectangle struct {
 	id int
-	rect.Rectangle
-	points []points.Classic
+	geo.Rectangle
+	points []geo.Point
 }
 
 // calcPoints fills the rectangle's points slice with all the points the rectangle covers
 func (r *rectangle) calcPoints() {
 	size := (r.Max.X - r.Min.X + 1) * (r.Max.Y - r.Min.Y + 1)
-	var cs = make([]points.Classic, size)
+	var cs = make([]geo.Point, size)
 	idx := 0
 	for i := r.Min.X; i <= r.Max.X; i++ {
 		for j := r.Min.Y; j <= r.Max.Y; j++ {
-			cs[idx] = points.NewClassic(i, j)
+			cs[idx] = geo.Point{i, j}
 			idx++
 		}
 	}

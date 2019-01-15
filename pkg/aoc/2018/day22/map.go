@@ -4,7 +4,6 @@ import (
 	"strings"
 
 	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo/points"
 )
 
 const (
@@ -21,7 +20,7 @@ var tiles = map[int]byte{
 }
 
 type Region struct {
-	Location            geo.Pointer
+	Location            geo.Point
 	Erosion, Geological int
 	Terrain             int
 }
@@ -29,14 +28,14 @@ type Region struct {
 type Map struct {
 	Data   [][]*Region
 	Depth  int
-	Target geo.Pointer
+	Target geo.Point
 }
 
-func (m *Map) get(p geo.Pointer) *Region {
+func (m *Map) get(p geo.Point) *Region {
 	return m.Data[p.GetY()][p.GetX()]
 }
 
-func (m *Map) calcGeo(p geo.Pointer) int {
+func (m *Map) calcGeo(p geo.Point) int {
 	x, y := p.GetX(), p.GetY()
 	switch {
 	case x == m.Target.GetX() && y == m.Target.GetY():
@@ -74,8 +73,8 @@ func (m *Map) String() string {
 	return sb.String()
 }
 
-func (m *Map) neighbours(p geo.Pointer) []*Region {
-	ns := points.Neighbours(p)
+func (m *Map) neighbours(p geo.Point) []*Region {
+	ns := p.Neighbours()
 	var rs []*Region
 	for _, neighbour := range ns {
 		if neighbour.GetX() < 0 ||
