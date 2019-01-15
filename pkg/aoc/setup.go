@@ -13,8 +13,8 @@ type Result struct {
 	ParseTime time.Duration
 	Duration1 time.Duration
 	Duration2 time.Duration
-	Solution1 string
-	Solution2 string
+	Solution1 interface{}
+	Solution2 interface{}
 }
 
 type Config struct {

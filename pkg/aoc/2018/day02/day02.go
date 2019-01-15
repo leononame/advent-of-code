@@ -23,7 +23,7 @@ Available Subcommands:
 	r.ParseTime = 0
 
 	t1 := time.Now()
-	r.Solution1 = fmt.Sprintf("%30d", part1(config.Input))
+	r.Solution1 = part1(config.Input)
 	r.Duration1 = time.Since(t1)
 
 	p2 := part2
@@ -32,7 +32,7 @@ Available Subcommands:
 	}
 
 	t2 := time.Now()
-	r.Solution2 = fmt.Sprintf("%30s", p2(config.Input))
+	r.Solution2 = p2(config.Input)
 	r.Duration2 = time.Since(t2)
 	return r
 }

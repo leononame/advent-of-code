@@ -1,13 +1,17 @@
-package main
+package day04
 
 import (
-	"fmt"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
+	"github.com/logrusorgru/aurora"
+
+	"github.com/sirupsen/logrus"
+
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
 )
 
 type date struct {
@@ -21,20 +25,31 @@ type hour struct {
 	minute int
 }
 
-func main() {
-	fmt.Println("Challenge:\t2018-04")
-	input := util.GetInput("input")
-	sort.Strings(input)
-	part1(input)
-	fmt.Println()
-	part2(input)
+var logger *logrus.Logger
+
+func Run(c *aoc.Config) (result aoc.Result) {
+	logger = c.Logger
+
+	t0 := time.Now()
+	sort.Strings(c.Input)
+	data := parseData(c.Input)
+	result.ParseTime = time.Since(t0)
+
+	t1 := time.Now()
+	result.Solution1 = part1(data)
+	result.Duration1 = time.Since(t1)
+
+	t2 := time.Now()
+	result.Solution2 = part2(data)
+	result.Duration2 = time.Since(t2)
+	return
+
 }
 
 type guardData map[date]*[60]int
 
 func (gd *guardData) calcMinutesAsleep() int {
 	sum := 0
-
 	for _, day := range *gd {
 		for _, isAsleep := range day {
 			sum += isAsleep
@@ -128,8 +143,7 @@ func parseDate(s string) (date, hour) {
 	return date{vals[0], vals[1], vals[2]}, hour{vals[3], vals[4]}
 }
 
-func part1(input []string) {
-	data := parseData(input)
+func part1(data map[int]guardData) int {
 	max := 0
 	maxID := 0
 	for g, d := range data {
@@ -140,14 +154,14 @@ func part1(input []string) {
 		}
 	}
 	gd := data[maxID]
-	bestMinute, _ := gd.calcBestMinute()
-	fmt.Printf("Part 1: Best guard is id %d.\nThey fell asleep for a total of %d minutes.\n", maxID, max)
-	fmt.Printf("The best minute to sneak through is %d.\nThe product of m and g is %d.\n", bestMinute, bestMinute*maxID)
+	bestMinute, bestValue := gd.calcBestMinute()
+	logger.Debugf("Part 1: Best guard is id %d. They fell asleep for a total of %d minutes.", aurora.Green(maxID), max)
+	logger.Debugf("The best minute to sneak through is %d. The guard was asleep on %d days during that minute.", aurora.Green(bestMinute), bestValue)
+	logger.Debugf("The product of m and g is %d.\n", aurora.Green(bestMinute*maxID))
+	return bestMinute * maxID
 }
 
-func part2(input []string) {
-	data := parseData(input)
-
+func part2(data map[int]guardData) int {
 	max := 0
 	maxID := 0
 	maxMinute := 0
@@ -159,6 +173,8 @@ func part2(input []string) {
 			maxMinute = bm
 		}
 	}
-	fmt.Printf("Part 2: The guard that is most frequently asleep on the same minute is guard #%d.\n", maxID)
-	fmt.Printf("He spent minute %d asleep on %d days. The product of the minute and the guard ID is %d.\n", maxMinute, max, maxMinute*maxID)
+
+	logger.Debugf("Part 2: The guard that is most frequently asleep on the same minute is guard #%d.\n", aurora.Green(maxID))
+	logger.Debugf("He spent minute %d asleep on %d days. The product of the minute and the guard ID is %d.\n", aurora.Green(maxMinute), max, aurora.Green(maxMinute*maxID))
+	return maxMinute * maxID
 }

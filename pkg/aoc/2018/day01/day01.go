@@ -1,7 +1,6 @@
 package day01
 
 import (
-	"fmt"
 	"strconv"
 	"time"
 
@@ -22,11 +21,11 @@ func Run(config *aoc.Config) aoc.Result {
 
 	r.ParseTime = time.Duration(0)
 	t1 := time.Now()
-	r.Solution1 = fmt.Sprintf("%3d", part1(vals, 0))
+	r.Solution1 = part1(vals, 0)
 	r.Duration1 = time.Since(t1)
 
 	t2 := time.Now()
-	r.Solution2 = fmt.Sprintf("%3d", part2(vals))
+	r.Solution2 = part2(vals)
 	r.Duration2 = time.Since(t2)
 	return r
 }
