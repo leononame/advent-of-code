@@ -1,12 +1,32 @@
-package main
+package day08
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
+	"github.com/sirupsen/logrus"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
 )
+
+var logger *logrus.Logger
+
+func Run(c *aoc.Config) (result aoc.Result) {
+	logger = c.Logger
+
+	t0 := time.Now()
+	t := parse(c.Input[0])
+	result.ParseTime = time.Since(t0)
+
+	t1 := time.Now()
+	result.Solution1 = part1(t)
+	result.Duration1 = time.Since(t1)
+
+	t2 := time.Now()
+	result.Solution2 = part2(t)
+	result.Duration2 = time.Since(t2)
+	return
+}
 
 type node struct {
 	meta     []int
@@ -17,29 +37,16 @@ type tree struct {
 	root *node
 }
 
-func main() {
-	fmt.Println("Challenge:\t2018-08")
-	input := util.GetInput("input")[0]
-	l := strings.Split(input, " ")
-	var data []int
-	for _, entry := range l {
-		num, _ := strconv.Atoi(entry)
-		data = append(data, num)
-	}
-
-	t := parse(data)
-	part1(t)
-	part2(t)
-}
-
-func part1(t tree) {
+func part1(t tree) int {
 	n := calcMeta(t.root)
-	fmt.Println("Tree has a meta sum of", n)
+	logger.Debug("Tree has a meta sum of", n)
+	return n
 }
 
-func part2(t tree) {
+func part2(t tree) int {
 	v := calcValue(t.root)
-	fmt.Println("The root node has the value", v)
+	logger.Debug("The root node has the value", v)
+	return v
 }
 
 func calcValue(n *node) int {
@@ -64,7 +71,14 @@ func calcMeta(n *node) int {
 	return s
 }
 
-func parse(data []int) tree {
+func parse(input string) tree {
+	l := strings.Split(input, " ")
+	var data []int
+	for _, entry := range l {
+		num, _ := strconv.Atoi(entry)
+		data = append(data, num)
+	}
+
 	t := tree{}
 	n, _ := parseNode(0, &data)
 	t.root = n

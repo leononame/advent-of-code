@@ -1,12 +1,32 @@
-package main
+package day12
 
 import (
 	"fmt"
 	"strings"
+	"time"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/version"
+	"github.com/sirupsen/logrus"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
 )
+
+var logger *logrus.Logger
+
+func Run(c *aoc.Config) (result aoc.Result) {
+	logger = c.Logger
+
+	t0 := time.Now()
+	g := parse(c.Input)
+	result.ParseTime = time.Since(t0)
+
+	t1 := time.Now()
+	result.Solution1 = part1(g)
+	result.Duration1 = time.Since(t1)
+
+	t2 := time.Now()
+	result.Solution2 = part2(g)
+	result.Duration2 = time.Since(t2)
+	return
+}
 
 type generation struct {
 	index int
@@ -24,22 +44,19 @@ func (g *generation) sum() int {
 	return s
 }
 
-func main() {
-	fmt.Println("Advent of Code 2018, ", version.Str)
-	fmt.Println("Challenge: 2018-12")
-	input := util.GetInput("input")
-	g := parseInput(input)
+func part1(g generation) int {
 	generations := []generation{g}
 	for i := 0; i < 20; i++ {
 		generations = append(generations, next(generations[i]))
 	}
-	fmt.Println("Generation 20: ", generations[20].s)
-	fmt.Println("Total count: ", generations[20].sum())
 
-	fmt.Println("Generation 50000000000: ", part2(g))
+	sum := generations[20].sum()
+	logger.Debug("Generation 20: ", generations[20].s)
+	logger.Debug("Total count: ", sum)
+	return sum
 }
 
-func parseInput(input []string) generation {
+func parse(input []string) generation {
 	var g generation
 	fmt.Sscanf(input[0], "initial state: %s", &g.s)
 	g.index = 0

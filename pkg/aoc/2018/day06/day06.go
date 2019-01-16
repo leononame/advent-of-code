@@ -1,30 +1,44 @@
-package main
+package day06
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
+	"time"
+
+	"github.com/sirupsen/logrus"
+
+	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
+
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
 
 	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
 )
 
-type coordinate struct {
-	x int
-	y int
-}
+func Run(c *aoc.Config) (result aoc.Result) {
+	logger = c.Logger
 
-func main() {
-	fmt.Println("Challenge:\t2018-06")
-	input := util.GetInput("input")
-	var cs []coordinate
-	for _, s := range input {
-		cs = append(cs, parseCoordinate(s))
+	t0 := time.Now()
+	var ps []geo.Point
+	for _, s := range c.Input {
+		ps = append(ps, parseCoordinate(s))
 	}
-	part1(cs)
-	part2(cs)
+	result.ParseTime = time.Since(t0)
+
+	t1 := time.Now()
+	result.Solution1 = part1(ps)
+	result.Duration1 = time.Since(t1)
+
+	t2 := time.Now()
+	result.Solution2 = part2(ps)
+	result.Duration2 = time.Since(t2)
+	return
+
+	return
 }
 
-func part1(cs []coordinate) {
+var logger *logrus.Logger
+
+func part1(cs []geo.Point) int {
 	data := mapCoordinates(cs)
 	mx, my := findMax(cs)
 	grid := buildGrid(data, mx, my)
@@ -32,10 +46,11 @@ func part1(cs []coordinate) {
 
 	removeBorders(sizes, grid)
 	c, size := getMax(sizes)
-	fmt.Println("Coordinate", data[c], "has the highest area with a total size of", size)
+	logger.Debug("Coordinate", data[c], "has the highest area with a total size of", size)
+	return size
 }
 
-func part2(cs []coordinate) {
+func part2(cs []geo.Point) int {
 	mx, my := findMax(cs)
 	count := 0
 	for x := 0; x < mx; x++ {
@@ -45,12 +60,13 @@ func part2(cs []coordinate) {
 			}
 		}
 	}
-	fmt.Println("The area of the safe region (part 2) is", count)
+	logger.Debug("The area of the safe region (part 2) is", count)
+	return count
 }
 
-func isValid(x, y int, cs []coordinate) bool {
+func isValid(x, y int, cs []geo.Point) bool {
 	sum := 0
-	ref := coordinate{x: x, y: y}
+	ref := geo.Point{x, y}
 	for _, c := range cs {
 		sum += manhattan(ref, c)
 	}
@@ -95,7 +111,7 @@ func calcSizes(grid [][]int) map[int]int {
 	return sizes
 }
 
-func buildGrid(data map[int]coordinate, sx, sy int) [][]int {
+func buildGrid(data map[int]geo.Point, sx, sy int) [][]int {
 	grid := make([][]int, sx)
 	for i, _ := range grid {
 		grid[i] = make([]int, sy)
@@ -109,16 +125,16 @@ func buildGrid(data map[int]coordinate, sx, sy int) [][]int {
 	return grid
 }
 
-func mapCoordinates(cs []coordinate) map[int]coordinate {
-	r := make(map[int]coordinate)
+func mapCoordinates(cs []geo.Point) map[int]geo.Point {
+	r := make(map[int]geo.Point)
 	for i, _ := range cs {
 		r[i+1] = cs[i]
 	}
 	return r
 }
 
-func getClosest(data map[int]coordinate, x int, y int) int {
-	ref := coordinate{x: x, y: y}
+func getClosest(data map[int]geo.Point, x int, y int) int {
+	ref := geo.Point{x, y}
 	distance := 500
 	current := 0
 	for i, c := range data {
@@ -134,28 +150,28 @@ func getClosest(data map[int]coordinate, x int, y int) int {
 
 }
 
-func findMax(cs []coordinate) (int, int) {
+func findMax(cs []geo.Point) (int, int) {
 	x, y := 0, 0
 	for _, c := range cs {
-		if c.x > x {
-			x = c.x
+		if c.X > x {
+			x = c.X
 		}
-		if c.y > y {
-			y = c.y
+		if c.Y > y {
+			y = c.Y
 		}
 	}
 	return x, y
 }
 
-func manhattan(a, b coordinate) int {
-	return util.Abs(a.x-b.x) + util.Abs(a.y-b.y)
+func manhattan(a, b geo.Point) int {
+	return util.Abs(a.X-b.X) + util.Abs(a.Y-b.Y)
 }
 
-func parseCoordinate(s string) coordinate {
+func parseCoordinate(s string) geo.Point {
 	data := strings.Split(s, ", ")
-	return coordinate{
-		x: atoi(data[0]),
-		y: atoi(data[1]),
+	return geo.Point{
+		X: atoi(data[0]),
+		Y: atoi(data[1]),
 	}
 }
 

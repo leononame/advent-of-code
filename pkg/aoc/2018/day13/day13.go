@@ -1,13 +1,52 @@
-package main
+package day13
 
 import (
-	"errors"
 	"fmt"
 	"sort"
+	"time"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/version"
+	"github.com/sirupsen/logrus"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
 )
+
+var logger *logrus.Logger
+
+func Run(c *aoc.Config) (result aoc.Result) {
+	logger = c.Logger
+
+	t0 := time.Now()
+	p := parse(c.Input)
+	result.ParseTime = time.Since(t0)
+
+	t1 := time.Now()
+	result.Solution1 = part1(p)
+	result.Duration1 = time.Since(t1)
+
+	t2 := time.Now()
+	result.Solution2 = part2(p)
+	result.Duration2 = time.Since(t2)
+	return
+}
+
+func part1(p *plan) string {
+	for crash := p.tick(); ; crash = p.tick() {
+		if crash != "" {
+			return crash
+		}
+	}
+}
+
+func part2(p *plan) string {
+	for crash := p.tick(); ; crash = p.tick() {
+		if crash != "" && len(p.carts) == 1 {
+			pos := fmt.Sprintf("%d,%d",
+				int(real(p.carts[0].position)),
+				int(imag(p.carts[0].position)))
+			logger.Debugf("The position of the last remaining cart is: %s", pos)
+			return pos
+		}
+	}
+}
 
 const left complex64 = -1
 const up complex64 = -1i
@@ -62,10 +101,10 @@ func (p *plan) Swap(i, j int) {
 	p.carts[i], p.carts[j] = p.carts[j], p.carts[i]
 }
 
-func (p *plan) Tick() error {
+func (p *plan) tick() string {
 	// Sort myself
 	sort.Sort(p)
-	var err error
+	var pos string
 	for i, c := range p.carts {
 		if c == nil {
 			continue
@@ -78,10 +117,9 @@ func (p *plan) Tick() error {
 			p.carts[i] = nil
 			p.carts[find(p.carts, p.positions[c.position])] = nil
 			delete(p.positions, c.position)
-			// Return position error, but only if first error
-			if err == nil {
-				err = errors.New(
-					fmt.Sprintf("Cart has crashed at position %d,%d", int(real(c.position)), int(imag(c.position))))
+			// Return position crash, but only if first time
+			if pos == "" {
+				pos = fmt.Sprintf("%d,%d", int(real(c.position)), int(imag(c.position)))
 			}
 		} else {
 			p.positions[c.position] = c
@@ -89,30 +127,7 @@ func (p *plan) Tick() error {
 		c.checkDir(p.track[c.position])
 	}
 	p.carts = removeNil(p.carts)
-	return err
-}
-
-func main() {
-	fmt.Println("Advent of Code 2018, ", version.Str)
-	fmt.Println("Challenge: 2018-13")
-	input := util.GetInput("input")
-	p := parse(input)
-	for {
-		if err := p.Tick(); err != nil {
-			fmt.Println(err.Error())
-			break
-		}
-	}
-	// part 2
-	for {
-		err := p.Tick()
-		if err != nil && len(p.carts) == 1 {
-			fmt.Printf("The position of the last remaining cart is: %d,%d\n",
-				int(real(p.carts[0].position)),
-				int(imag(p.carts[0].position)),
-			)
-		}
-	}
+	return pos
 }
 
 var directions = map[rune]complex64{

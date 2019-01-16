@@ -1,38 +1,52 @@
 package day15
 
 import (
-	"fmt"
 	"sort"
+	"time"
+
+	"github.com/sirupsen/logrus"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
 
 	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
 )
 
-func Run(input []string) {
-	// Part 1: 250648
-	// Part 2: 42392 25
-	c := parse(input)
-	part1(c)
-	part2(input)
+var logger *logrus.Logger
+
+func Run(config *aoc.Config) (result aoc.Result) {
+	logger = config.Logger
+
+	t0 := time.Now()
+	c := parse(config.Input)
+	result.ParseTime = time.Since(t0)
+
+	t1 := time.Now()
+	result.Solution1 = part1(c)
+	result.Duration1 = time.Since(t1)
+
+	t2 := time.Now()
+	result.Solution2 = part2(config.Input)
+	result.Duration2 = time.Since(t2)
+	return
 }
 
-func part2(input []string) {
+func part2(input []string) int {
 	// pow := 20
 	for pow := 4; ; pow++ {
-		fmt.Println("Trying attack power", pow)
+		logger.Debug("Trying attack power ", pow)
 		c := parse(input)
 		for _, e := range c.elves {
 			e.pow = pow
 		}
 		nelves := len(c.elves)
-		part1(c)
+		outcome := part1(c)
 		if nelves-len(c.elves) == 0 {
-			fmt.Println("Elves have not lost any unit with attack power", pow)
-			return
+			logger.Debug("Elves have not lost any unit with attack power ", pow)
+			return outcome
 		}
 	}
 }
 
-func part1(c *cave) {
+func part1(c *cave) int {
 	round := 0
 outer:
 	for {
@@ -54,17 +68,17 @@ outer:
 	}
 
 	c.PrintInfo()
-	fmt.Printf("Round %d, Goblins: %d, Elves %d\n", round, len(c.goblins), len(c.elves))
+	logger.Debugf("Round %d, Goblins: %d, Elves %d\n", round, len(c.goblins), len(c.elves))
 	if len(c.elves) == 0 {
-		fmt.Printf("Goblins won. Round %d, Hitpoints %d\n", round, hitpoints(c.goblins))
-		fmt.Println("Outcome:", round*hitpoints(c.goblins))
-		return
+		logger.Debugf("Goblins won. Round %d, Hitpoints %d\n", round, hitpoints(c.goblins))
+		logger.Debug("Outcome: ", round*hitpoints(c.goblins))
+		return round * hitpoints(c.goblins)
 	}
-	if len(c.goblins) == 0 {
-		fmt.Printf("Elves won. Round %d, Hitpoints %d\n", round, hitpoints(c.elves))
-		fmt.Println("Outcome:", round*hitpoints(c.elves))
-		return
-	}
+
+	logger.Debugf("Elves won. Round %d, Hitpoints %d\n", round, hitpoints(c.elves))
+	logger.Debug("Outcome: ", round*hitpoints(c.elves))
+	return round * hitpoints(c.elves)
+
 }
 
 func hitpoints(us []*unit) int {

@@ -1,12 +1,33 @@
-package main
+package day16
 
 import (
 	"fmt"
 	"strings"
+	"time"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/version"
+	"github.com/sirupsen/logrus"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
 )
+
+var logger *logrus.Logger
+
+func Run(config *aoc.Config) (result aoc.Result) {
+	logger = config.Logger
+
+	t0 := time.Now()
+	cs, is := parse(config.Input)
+	result.ParseTime = time.Since(t0)
+
+	t1 := time.Now()
+	p1, count := part1(cs)
+	result.Solution1 = count
+	result.Duration1 = time.Since(t1)
+
+	t2 := time.Now()
+	result.Solution2 = part2(cs, p1, is)
+	result.Duration2 = time.Since(t2)
+	return
+}
 
 type registers [4]int
 type instruction struct {
@@ -22,14 +43,29 @@ type operation func(rs registers, a, b, c int) registers
 var oplist = [16]operation{addr, addi, mulr, muli, banr, bani, borr, bori, setr, seti, eqir, eqri, eqrr, gtir, gtri, gtrr}
 var opcodes = [16]operation{}
 
-func main() {
-	fmt.Println("Advent of Code 2018, ", version.Str)
-	fmt.Println("Challenge: 2018-16")
-	input := util.GetInput("input")
-	cs, is := parse(input)
-	combinations := countAndCombine(cs)
+func part1(cs []*capture) ([16][16]bool, int) {
+	count := 0
+	var combinations [16][16]bool
+	for _, c := range cs {
+		success := 0
+		for i, op := range oplist {
+			if op(c.before, c.i.params[0], c.i.params[1], c.i.params[2]) == c.after {
+				success++
+			} else {
+				combinations[c.i.code][i] = true
+			}
+		}
+		if success > 2 {
+			count++
+		}
+	}
+	return combinations, count
+}
+
+func part2(cs []*capture, combinations [16][16]bool, is []*instruction) int {
 	mapOpcodes(cs, combinations)
-	fmt.Println("Part 2", run(is))
+	solution := run(is)
+	return solution[0]
 }
 
 func run(is []*instruction) registers {
@@ -60,26 +96,6 @@ func mapOpcodes(cs []*capture, combinations [16][16]bool) {
 			}
 		}
 	}
-}
-
-func countAndCombine(cs []*capture) [16][16]bool {
-	count := 0
-	var combinations [16][16]bool
-	for _, c := range cs {
-		success := 0
-		for i, op := range oplist {
-			if op(c.before, c.i.params[0], c.i.params[1], c.i.params[2]) == c.after {
-				success++
-			} else {
-				combinations[c.i.code][i] = true
-			}
-		}
-		if success > 2 {
-			count++
-		}
-	}
-	fmt.Println("Part 1:", count)
-	return combinations
 }
 
 func parse(input []string) ([]*capture, []*instruction) {

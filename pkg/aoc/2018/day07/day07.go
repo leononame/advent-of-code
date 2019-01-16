@@ -1,12 +1,33 @@
-package main
+package day07
 
 import (
-	"fmt"
 	"sort"
 	"strings"
+	"time"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
+	"github.com/sirupsen/logrus"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
 )
+
+var logger *logrus.Logger
+
+func Run(c *aoc.Config) (result aoc.Result) {
+	logger = c.Logger
+
+	t0 := time.Now()
+	s := parse(c.Input)
+	result.ParseTime = time.Since(t0)
+
+	t1 := time.Now()
+	result.Solution1 = part1(s)
+	result.Duration1 = time.Since(t1)
+
+	s = parse(c.Input)
+	t2 := time.Now()
+	result.Solution2 = part2(s)
+	result.Duration2 = time.Since(t2)
+	return
+}
 
 type sequence struct {
 	requirements map[string][]string
@@ -14,16 +35,7 @@ type sequence struct {
 	result       []string
 }
 
-func main() {
-	fmt.Println("Challenge:\t2018-07")
-	input := util.GetInput("input")
-	s := parse(input)
-	seq := part1(s)
-	s = parse(input)
-	part2(s, seq)
-}
-
-func part2(s sequence, order []string) {
+func part2(s sequence) int {
 	pool := 15
 	tick := 0
 
@@ -54,11 +66,12 @@ func part2(s sequence, order []string) {
 		tick++
 	}
 
-	fmt.Println("The sequence for part 2 is ", strings.Join(s.result, ""))
-	fmt.Println("It would take", tick, "seconds")
+	logger.Debug("The sequence for part 2 is ", strings.Join(s.result, ""))
+	logger.Debug("It would take", tick, "seconds")
+	return tick
 }
 
-func part1(s sequence) []string {
+func part1(s sequence) string {
 	for {
 		an := s.getAvailableNodes()
 		if len(an) == 0 {
@@ -67,8 +80,9 @@ func part1(s sequence) []string {
 		sort.Strings(an)
 		s.nextStep(an[0])
 	}
-	fmt.Println("The correct sequence is", strings.Join(s.result, ""))
-	return s.result
+	res := strings.Join(s.result, "")
+	logger.Debug("The correct sequence is", res)
+	return res
 }
 
 func parse(input []string) sequence {
