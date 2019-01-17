@@ -48,7 +48,7 @@ func (m *marble) String() string {
 }
 
 func part1(n, max int) int {
-	players := make(map[int]int)
+	players := make([]int, n)
 	c := makeCircle()
 	val := 1
 	for val <= max {
@@ -62,7 +62,7 @@ func part1(n, max int) int {
 }
 
 func part2(n, max int) int {
-	players := make(map[int]int)
+	players := make([]int, n)
 	c := makeCircle()
 	max *= 100
 	val := 1
@@ -76,7 +76,7 @@ func part2(n, max int) int {
 	return score
 }
 
-func maxScore(m map[int]int) int {
+func maxScore(m []int) int {
 	var max int
 	for _, v := range m {
 		if v > max {
