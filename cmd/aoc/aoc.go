@@ -4,6 +4,15 @@ import (
 	"fmt"
 	"os"
 
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day18"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day19"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day20"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day21"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day22"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day23"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day24"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day25"
+
 	"github.com/olekukonko/tablewriter"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day01"
@@ -22,6 +31,7 @@ import (
 	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day14"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day15"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day16"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day17"
 )
 
 func main() {
@@ -83,5 +93,14 @@ var runners = map[int]map[int]func(config *aoc.Config) aoc.Result{
 		14: day14.Run,
 		15: day15.Run,
 		16: day16.Run,
+		17: day17.Run,
+		18: day18.Run,
+		19: day19.Run,
+		20: day20.Run,
+		21: day21.Run,
+		22: day22.Run,
+		23: day23.Run,
+		24: day24.Run,
+		25: day25.Run,
 	},
 }

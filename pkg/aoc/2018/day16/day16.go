@@ -160,12 +160,12 @@ func bori(rs registers, a, b, c int) registers {
 	return rs
 }
 
-func setr(rs registers, a, b, c int) registers {
+func setr(rs registers, a, _, c int) registers {
 	rs[c] = rs[a]
 	return rs
 }
 
-func seti(rs registers, a, b, c int) registers {
+func seti(rs registers, a, _, c int) registers {
 	rs[c] = a
 	return rs
 }

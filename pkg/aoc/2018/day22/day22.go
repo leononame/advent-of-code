@@ -3,15 +3,32 @@ package day22
 import (
 	"container/heap"
 	"fmt"
+	"time"
+
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
+
+	"github.com/sirupsen/logrus"
 
 	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
 )
 
-func Run(input []string) {
-	m := parse(input)
-	fmt.Println(m)
-	fmt.Println("Part 1:", m.calcRisk())
-	fmt.Println("Part 2:", part2(TraverseMap{m}))
+var logger *logrus.Logger
+
+func Run(c *aoc.Config) (result aoc.Result) {
+	logger = c.Logger
+
+	t0 := time.Now()
+	m := parse(c.Input)
+	result.ParseTime = time.Since(t0)
+
+	t1 := time.Now()
+	result.Solution1 = m.calcRisk()
+	result.Duration1 = time.Since(t1)
+
+	t2 := time.Now()
+	result.Solution2 = part2(TraverseMap{m})
+	result.Duration2 = time.Since(t2)
+	return
 }
 
 func part2(m TraverseMap) int {
@@ -40,12 +57,12 @@ func part2(m TraverseMap) int {
 
 			if c, ok := costs[n]; !ok || cost < c {
 				i++
-				// fmt.Printf("Step %3d: From %3d,%3d to %3d,%3d.", i,
-				// 	current.Location.GetX(),
-				// 	current.Location.GetY(),
-				// 	n.Location.GetX(),
-				// 	n.Location.GetY())
-				// fmt.Printf("Cost: %4d, Tool: %d\n", cost, n.tool)
+				logger.Debugf("Step %3d: From %3d,%3d to %3d,%3d.", i,
+					current.Location.GetX(),
+					current.Location.GetY(),
+					n.Location.GetX(),
+					n.Location.GetY())
+				logger.Debugf("Cost: %4d, Tool: %d\n", cost, n.tool)
 				costs[n] = cost
 				next := Item{Tile: n, priority: cost + distance(n.Location, m.Target)}
 				heap.Push(&pq, &next)

@@ -2,9 +2,32 @@ package day23
 
 import (
 	"fmt"
+	"time"
+
+	"github.com/sirupsen/logrus"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
 
 	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
 )
+
+var logger *logrus.Logger
+
+func Run(c *aoc.Config) (result aoc.Result) {
+	logger = c.Logger
+
+	t0 := time.Now()
+	bots := parse(c.Input)
+	result.ParseTime = time.Since(t0)
+
+	t1 := time.Now()
+	result.Solution1 = part1(bots)
+	result.Duration1 = time.Since(t1)
+
+	t2 := time.Now()
+	result.Solution2 = part2(bots)
+	result.Duration2 = time.Since(t2)
+	return
+}
 
 type nanoBot struct {
 	r int
@@ -26,18 +49,12 @@ func (n nanoBots) points() (points []geo.Point3) {
 	return
 }
 
-func Run(input []string) {
-	bots := parse(input)
-	part1(bots)
-	part2(bots)
-}
-
-func part1(bots []nanoBot) {
+func part1(bots []nanoBot) int {
 	i := maxRange(bots)
-	fmt.Println("Part 1:", strength(bots, i))
+	return strength(bots, i)
 }
 
-func part2(bots nanoBots) {
+func part2(bots nanoBots) int {
 	origin := geo.Point3{}
 	var maxCount, bestDistance int
 	bestPoint := origin
@@ -94,13 +111,13 @@ func part2(bots nanoBots) {
 			bestPoint.GetX() + size + 1,
 			bestPoint.GetY() + size + 1,
 			bestPoint.GetZ() + size + 1}
-		fmt.Printf("Size: %d, Count: %d, Distance: %d, Location: %d,%d,%d\n",
+		logger.Debugf("Size: %d, Count: %d, Distance: %d, Location: %d,%d,%d\n",
 			size, maxCount, bestDistance,
 			bestPoint.GetX(),
 			bestPoint.GetY(),
 			bestPoint.GetZ())
 	}
-	fmt.Println("Part2:", bestDistance)
+	return bestDistance
 }
 
 func strength(bots []nanoBot, i int) int {

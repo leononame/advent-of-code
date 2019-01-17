@@ -1,12 +1,33 @@
-package main
+package day21
 
 import (
 	"fmt"
-	"math"
+	"reflect"
+	"runtime"
+	"time"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/version"
+	"github.com/sirupsen/logrus"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
 )
+
+var logger *logrus.Logger
+
+func Run(c *aoc.Config) (result aoc.Result) {
+	logger = c.Logger
+
+	t0 := time.Now()
+	p := parse(c.Input)
+	result.ParseTime = time.Since(t0)
+
+	t1 := time.Now()
+	result.Solution1 = part1(*p)
+	result.Duration1 = time.Since(t1)
+
+	t2 := time.Now()
+	result.Solution2 = part2(*p)
+	result.Duration2 = time.Since(t2)
+	return
+}
 
 type registers [6]int
 type instruction struct {
@@ -39,54 +60,37 @@ type program struct {
 	is    []*instruction
 }
 
-func main() {
-	fmt.Println("Advent of Code 2018, ", version.Str)
-	fmt.Println("Challenge: 2018-19")
-	input := util.GetInput("input")
-	p := parse(input)
-	rp1 := run(*p, registers{})
-	fmt.Println("Part 1:", rp1[0])
-	rp2 := part2(*p)
-	fmt.Println("Part 2:", rp2[0]) // Expected: 10628484
+func part1(p program) int {
+	// Looking at the source code, register 0 is only used once. It's used to
+	// compare the value with eqrr to another register. In my case, with R5.
+	// For my input, this would be instruction 29. Let's just run the program
+	// regularly until the comparison hits. Then we can extract that number
+	res, i := run(p, registers{}, eqrr)
+	reg := i.params[0]
+	return res[reg]
 }
 
-func part2(p program) registers {
-	// These two operations set the jump of seti to 100, effectively halting the
-	// program prematurely because it doesn't jump into the loop
-	// Thus, we can run the program until the number that we need to sum the
-	// divisors is calculated. Then, the program exits.
-	p.is[26].params[0] = 100 // For part 1
-	p.is[35].params[0] = 100 // For part 2
-	// Run the program to calculate our number
-	resp := run(p, registers{1})
-	// Instruction 33 writes the number into our target register. Extract that
-	// register
-	reg := p.is[33].params[2]
-	num := resp[reg]
-	// Calculate sum of divisors of said number
-	return registers{divSum(num)}
+func part2(p program) int {
+	// Magic number, our input
+	magic := p.is[7].params[0]
+	// Algorithm
+	return rev10(magic)
 }
 
-func divSum(n int) int {
-	res := 1
-	for i := 2; i < int(math.Sqrt(float64(n))); i++ {
-		if n%i == 0 {
-			res += (i + n/i)
-		}
-	}
-	return res + n
-}
-
-func run(p program, rs registers) registers {
+func run(p program, rs registers, breakOn operation) (registers, *instruction) {
 	ip := 0
 	for ip < len(p.is) && ip >= 0 {
 		i := p.is[ip]
 		rs = i.op(rs, i.params[0], i.params[1], i.params[2])
+		logger.Debug(ip, "\t", runtime.FuncForPC(reflect.ValueOf(i.op).Pointer()).Name(), i.params, rs)
 		rs[p.ipReg]++
 		ip = rs[p.ipReg]
-		// fmt.Println(ip, "\t", runtime.FuncForPC(reflect.ValueOf(i.op).Pointer()).Name(), i.params, rs)
+
+		if reflect.ValueOf(i.op).Pointer() == reflect.ValueOf(breakOn).Pointer() {
+			return rs, i
+		}
 	}
-	return rs
+	return rs, nil
 }
 
 func parse(input []string) *program {
@@ -204,4 +208,27 @@ func eqrr(rs registers, a, b, c int) registers {
 		rs[c] = 0
 	}
 	return rs
+}
+
+// Refactor the last program (rev09) into a function that looks for a repeat
+func rev10(input int) int {
+	var R3, R5, last int
+	// List of values for R0 which would exit our program
+	repeats := make(map[int]bool)
+	for {
+		R3 = R5 | 65536 // R3 = 65536
+		for R5 = input; ; R3 /= 256 {
+			R5 = ((((R5 + (R3 & 255)) & 16777215) * 65899) & 16777215)
+			if R3 < 256 {
+				break
+			}
+		}
+
+		// fmt.Println(R5)
+		if repeats[R5] {
+			return last
+		}
+		last = R5
+		repeats[R5] = true
+	}
 }

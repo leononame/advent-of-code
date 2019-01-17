@@ -1,4 +1,4 @@
-package main
+package day21
 
 // 00 seti 123 0 5
 // 01 bani 5 456 5

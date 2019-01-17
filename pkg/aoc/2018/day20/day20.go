@@ -1,13 +1,32 @@
-package main
+package day20
 
 import (
-	"fmt"
 	"os"
 	"strings"
+	"time"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/version"
+	"github.com/sirupsen/logrus"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
 )
+
+var logger *logrus.Logger
+
+func Run(c *aoc.Config) (result aoc.Result) {
+	logger = c.Logger
+
+	t0 := time.Now()
+	n := parse(c.Input[0])
+	result.ParseTime = time.Since(t0)
+
+	t1 := time.Now()
+	result.Solution1 = n.furthest()
+	result.Duration1 = time.Since(t1)
+
+	t2 := time.Now()
+	result.Solution2 = n.countRooms(1000)
+	result.Duration2 = time.Since(t2)
+	return
+}
 
 const left point = -1
 const up point = -1i
@@ -25,19 +44,6 @@ var doors = map[byte]byte{
 	'S': '-',
 	'W': '|',
 	'E': '|',
-}
-
-func main() {
-	fmt.Println("Advent of Code 2018, ", version.Str)
-	fmt.Println("Challenge: 2018-20")
-	input := util.GetInput("input")[0]
-
-	test("^WNE$", 3)
-	test("^ENWWW(NEEE|SSE(EE|N))$", 10)
-	test("^ENNWSWW(NEWS|)SSSEEN(WNSE|)EE(SWEN|)NNN$", 18)
-	n := parse(input)
-	fmt.Println("Part 1:", n.furthest())
-	fmt.Println("Part 2:", n.countRooms(1000))
 }
 
 type point complex64

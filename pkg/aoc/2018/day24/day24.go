@@ -1,18 +1,34 @@
 package day24
 
 import (
-	"fmt"
 	"regexp"
 	"strconv"
+	"time"
+
+	"github.com/sirupsen/logrus"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
 )
 
-func Run(input []string) {
-	b := parse(input)
-	part1(b)
-	part2(input)
+var logger *logrus.Logger
+
+func Run(c *aoc.Config) (result aoc.Result) {
+	logger = c.Logger
+
+	t0 := time.Now()
+	b := parse(c.Input)
+	result.ParseTime = time.Since(t0)
+
+	t1 := time.Now()
+	result.Solution1 = part1(b)
+	result.Duration1 = time.Since(t1)
+
+	t2 := time.Now()
+	result.Solution2 = part2(c.Input)
+	result.Duration2 = time.Since(t2)
+	return
 }
 
-func part2(input []string) {
+func part2(input []string) int {
 	// Binary search the radius
 	radius := 1 << 8
 	boost := radius
@@ -30,7 +46,7 @@ func part2(input []string) {
 		if radius == 0 {
 			radius = 1
 		}
-		fmt.Printf("\rBoost: %d, Radius: %d, Winner: %t\n", boost, radius, won)
+		logger.Debugf("Boost: %d, Radius: %d, Winner: %t", boost, radius, won)
 
 		if !won {
 			boost += radius
@@ -38,24 +54,28 @@ func part2(input []string) {
 		}
 
 		if radius == 1 {
-			fmt.Printf("Immune System won with boost %d. Remaining units: %d\n",
+			units := b.imm.countUnits()
+
+			logger.Debugf("Immune System won with boost %d. Remaining units: %d\n",
 				boost,
-				b.imm.countUnits())
-			return
+				units)
+			return units
 		}
 		// We have reached a winning point, half the boost and look backwards
 		boost -= radius
 	}
 }
 
-func part1(b *battle) {
+func part1(b *battle) int {
 	// expected: 26937
 	winner := b.fight()
 	name := "Immune System"
 	if winner == &b.inf {
 		name = "Infection"
 	}
-	fmt.Printf("%s won with %d remaining units\n", name, winner.countUnits())
+	units := winner.countUnits()
+	logger.Debugf("%s won with %d remaining units\n", name, units)
+	return units
 }
 
 func atoi(in string) int {

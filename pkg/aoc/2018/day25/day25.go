@@ -1,10 +1,23 @@
 package day25
 
-import "fmt"
+import (
+	"fmt"
+	"time"
 
-func Run(input []string) {
-	ps := parse(input)
+	"github.com/sirupsen/logrus"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
+)
 
+var logger *logrus.Logger
+
+func Run(c *aoc.Config) (result aoc.Result) {
+	logger = c.Logger
+
+	t0 := time.Now()
+	ps := parse(c.Input)
+	result.ParseTime = time.Since(t0)
+
+	t1 := time.Now()
 	var cs constellations
 outer:
 	for _, p := range ps {
@@ -17,8 +30,9 @@ outer:
 		}
 		cs = append(cs, &constellation{p})
 	}
-
-	fmt.Println("Count:", len(cs))
+	result.Solution1 = len(cs)
+	result.Duration1 = time.Since(t1)
+	return
 }
 
 type point struct {

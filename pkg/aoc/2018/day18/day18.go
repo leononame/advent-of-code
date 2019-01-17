@@ -1,12 +1,32 @@
-package main
+package day18
 
 import (
-	"fmt"
 	"strings"
+	"time"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/version"
+	"github.com/sirupsen/logrus"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
 )
+
+var logger *logrus.Logger
+
+func Run(c *aoc.Config) (result aoc.Result) {
+	logger = c.Logger
+
+	t0 := time.Now()
+	a := parse(c.Input)
+	result.ParseTime = time.Since(t0)
+
+	t1 := time.Now()
+	for a.tick() < 10 {
+	}
+	result.Solution1 = a.score()
+	result.Duration1 = time.Since(t1)
+
+	result.Solution2 = a.scoreFor(1000000000)
+	result.Duration2 = time.Since(t1)
+	return
+}
 
 const tree = '|'
 const lumberyard = '#'
@@ -109,20 +129,6 @@ func (a *area) count(x, y int, acre byte) int {
 		}
 	}
 	return c
-}
-
-func main() {
-	fmt.Println("Advent of Code 2018, ", version.Str)
-	fmt.Println("Challenge: 2018-18")
-	input := util.GetInput("input")
-	a := parse(input)
-	for a.tick() < 10 {
-	}
-	fmt.Println(a)
-	fmt.Println("Part 1:", a.score())
-
-	p2 := a.scoreFor(1000000000)
-	fmt.Println("Part 2:", p2)
 }
 
 func parse(input []string) *area {
