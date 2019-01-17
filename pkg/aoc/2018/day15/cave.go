@@ -1,7 +1,6 @@
 package day15
 
 import (
-	"fmt"
 	"strings"
 
 	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
@@ -32,7 +31,7 @@ func (c *cave) String() string {
 }
 
 func (c *cave) PrintInfo() {
-	fmt.Print(c)
+	logger.Debug("Cave:\n", c)
 }
 
 func (c *cave) fightOver() bool {

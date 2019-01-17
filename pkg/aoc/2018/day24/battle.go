@@ -1,7 +1,6 @@
 package day24
 
 import (
-	"fmt"
 	"sort"
 )
 
@@ -72,7 +71,7 @@ func (b *battle) fight() *army {
 		}
 		tmp := b.imm.countUnits() + b.inf.countUnits()
 		if remainingUnits == tmp {
-			fmt.Printf("Deadlock")
+			logger.Debug("Deadlock")
 			return nil
 		}
 		remainingUnits = tmp

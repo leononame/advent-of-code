@@ -224,7 +224,6 @@ func rev10(input int) int {
 			}
 		}
 
-		// fmt.Println(R5)
 		if repeats[R5] {
 			return last
 		}

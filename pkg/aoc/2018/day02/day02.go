@@ -1,7 +1,6 @@
 package day02
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -12,12 +11,12 @@ import (
 var logger *logrus.Logger
 
 func Run(config *aoc.Config) aoc.Result {
-	fmt.Println(`aoc -y 2018 -d 02 [SUBCOMMAND]
+	logger = config.Logger
+	logger.Info(`Usage:
+aoc -y 2018 -d 02 [SUBCOMMAND]
 Available Subcommands:
   opt	Optimized version that looks for strings with Hamming Distance 1
 `)
-
-	logger = config.Logger
 	r := aoc.Result{}
 
 	r.ParseTime = 0

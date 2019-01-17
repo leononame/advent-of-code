@@ -38,7 +38,7 @@ func Run(c *aoc.Config) (result aoc.Result) {
 	result.Duration1 = d
 	result.Solution2 = im.age
 	result.Solution1 = "See output above"
-	fmt.Println(im)
+	logger.Info("Result:\n", im)
 	return
 }
 

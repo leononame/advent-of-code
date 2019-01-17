@@ -10,8 +10,6 @@ import (
 	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
 
 	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
-
-	"gitlab.com/leononame/advent-of-code-2018/pkg/util"
 )
 
 func Run(c *aoc.Config) (result aoc.Result) {
@@ -68,7 +66,7 @@ func isValid(x, y int, cs []geo.Point) bool {
 	sum := 0
 	ref := geo.Point{x, y}
 	for _, c := range cs {
-		sum += manhattan(ref, c)
+		sum += ref.Manhattan(c)
 	}
 	return sum < 10000
 }
@@ -138,7 +136,7 @@ func getClosest(data map[int]geo.Point, x int, y int) int {
 	distance := 500
 	current := 0
 	for i, c := range data {
-		d := manhattan(c, ref)
+		d := c.Manhattan(ref)
 		if d < distance {
 			distance = d
 			current = i
@@ -161,10 +159,6 @@ func findMax(cs []geo.Point) (int, int) {
 		}
 	}
 	return x, y
-}
-
-func manhattan(a, b geo.Point) int {
-	return util.Abs(a.X-b.X) + util.Abs(a.Y-b.Y)
 }
 
 func parseCoordinate(s string) geo.Point {

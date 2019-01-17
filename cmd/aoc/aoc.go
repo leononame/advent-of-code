@@ -4,16 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day18"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day19"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day20"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day21"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day22"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day23"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day24"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day25"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/printer"
 
-	"github.com/olekukonko/tablewriter"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day01"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day02"
@@ -32,11 +24,23 @@ import (
 	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day15"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day16"
 	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day17"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day18"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day19"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day20"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day21"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day22"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day23"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day24"
+	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day25"
 )
 
 func main() {
 	// Setup challenge
 	config := aoc.Setup()
+	if config.All {
+		RunAll(config)
+		os.Exit(0)
+	}
 
 	if runners[config.Year] == nil {
 		config.Logger.Errorf("Year %d not found", config.Year)
@@ -50,33 +54,30 @@ func main() {
 	r := runners[config.Year][config.Day](config)
 	fmt.Printf("Advent of Code: Year %d, Day %02d\n", config.Year, config.Day)
 
-	writeResultToTable(r)
+	p := printer.New()
+	p.AppendResult(r, config.Year, config.Day)
+	p.Flush()
 }
 
-func writeResultToTable(r aoc.Result) {
-	table := tablewriter.NewWriter(os.Stdout)
-	// Headers
-	table.SetHeader([]string{"Step", "Execution Time", "Solution"})
-	// No border
-	table.SetBorder(false)
-	// Alignments
-	table.SetColumnAlignment([]int{tablewriter.ALIGN_LEFT, tablewriter.ALIGN_RIGHT, tablewriter.ALIGN_RIGHT})
-	// Colors
-	table.SetHeaderColor(tablewriter.Colors{tablewriter.Bold, tablewriter.FgMagentaColor},
-		tablewriter.Colors{tablewriter.Bold, tablewriter.FgMagentaColor},
-		tablewriter.Colors{tablewriter.Bold, tablewriter.FgMagentaColor})
-	table.SetColumnColor(tablewriter.Colors{tablewriter.Normal, tablewriter.FgCyanColor},
-		tablewriter.Colors{tablewriter.Normal, tablewriter.FgBlackColor},
-		tablewriter.Colors{tablewriter.Normal, tablewriter.FgGreenColor})
-	// Write data
-	table.Append([]string{"Parse", fmt.Sprint(r.ParseTime), ""})
-	table.Append([]string{"Part 1", fmt.Sprint(r.Duration1), fmt.Sprint(r.Solution1)})
-	table.Append([]string{"Part 2", fmt.Sprint(r.Duration2), fmt.Sprint(r.Solution2)})
-	table.Render()
+func RunAll(config *aoc.Config) {
+	p := printer.New()
+	challenges := runners[config.Year]
+	for i, ch := range challenges {
+		if ch == nil {
+			continue
+		}
+		config.Day = i
+		config.SetToDefaultFilePath()
+		config.ReadFile()
+		result := ch(config)
+		p.AppendResult(result, config.Year, i)
+	}
+	p.Flush()
 }
 
-var runners = map[int]map[int]func(config *aoc.Config) aoc.Result{
+var runners = map[int][]func(config *aoc.Config) aoc.Result{
 	2018: {
+		0:  nil,
 		1:  day01.Run,
 		2:  day02.Run,
 		3:  day03.Run,

@@ -1,18 +1,10 @@
 package day24
 
 import (
-	"fmt"
 	"sort"
 )
 
 type army []*group
-
-func (a *army) printIDs() {
-	for _, g := range *a {
-		fmt.Print(g.id, ",")
-	}
-	fmt.Println()
-}
 
 func (a *army) chooseTarget(enemies army) []*fight {
 	// Sort by attack strength, then initiative
@@ -35,8 +27,7 @@ func (a *army) chooseTarget(enemies army) []*fight {
 
 			}
 		}
-		// fmt.Printf("fighter ID: %2d, idx: %2d, enemy ID: %2d, damage: %9d, data: ", g.id, idx, enemy.id, max)
-		// remaining.printIDs()
+		logger.Debugf("fighter ID: %2d, idx: %2d, enemy ID: %2d, damage: %9d, data: ", g.id, idx, enemy.id, max)
 		if max == 0 {
 			continue
 		}
