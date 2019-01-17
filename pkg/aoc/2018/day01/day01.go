@@ -21,7 +21,7 @@ func Run(config *aoc.Config) aoc.Result {
 
 	r.ParseTime = time.Duration(0)
 	t1 := time.Now()
-	r.Solution1 = part1(vals, 0)
+	r.Solution1 = part1(vals)
 	r.Duration1 = time.Since(t1)
 
 	t2 := time.Now()
@@ -39,8 +39,8 @@ func parse(config *aoc.Config) []int {
 	return vals
 }
 
-func part1(vals []int, startAt int) int {
-	result := startAt
+func part1(vals []int) int {
+	result := 0
 	for _, v := range vals {
 		result += v
 	}
@@ -48,25 +48,16 @@ func part1(vals []int, startAt int) int {
 }
 
 func part2(vals []int) int {
-	var freqs []int
+	seen := map[int]bool{0: true}
 	result := 0
 	for {
 		logger.Debug(result)
 		for _, v := range vals {
 			result += v
-			if exists(freqs, result) {
+			if seen[result] {
 				return result
 			}
-			freqs = append(freqs, result)
+			seen[result] = true
 		}
 	}
-}
-
-func exists(slice []int, val int) bool {
-	for _, v := range slice {
-		if val == v {
-			return true
-		}
-	}
-	return false
 }
