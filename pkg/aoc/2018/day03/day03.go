@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
+	"gitlab.com/leononame/advent-of-code/pkg/geo"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc"
 )
 
 func Run(c *aoc.Config) (result aoc.Result) {

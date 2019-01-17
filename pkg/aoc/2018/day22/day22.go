@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc"
 
 	"github.com/sirupsen/logrus"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
+	"gitlab.com/leononame/advent-of-code/pkg/geo"
 )
 
 var logger *logrus.Logger

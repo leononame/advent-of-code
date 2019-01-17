@@ -5,7 +5,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc"
 )
 
 var logger *logrus.Logger

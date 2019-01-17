@@ -3,7 +3,7 @@ package day22
 import (
 	"strings"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
+	"gitlab.com/leononame/advent-of-code/pkg/geo"
 )
 
 const (

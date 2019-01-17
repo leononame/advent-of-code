@@ -1,7 +1,7 @@
 package geo
 
 import (
-	"gitlab.com/leononame/advent-of-code-2018/pkg/mmath"
+	"gitlab.com/leononame/advent-of-code/pkg/mmath"
 )
 
 type Rectangle3 struct {

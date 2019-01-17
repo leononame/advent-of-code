@@ -1,6 +1,6 @@
 package geo
 
-import "gitlab.com/leononame/advent-of-code-2018/pkg/mmath"
+import "gitlab.com/leononame/advent-of-code/pkg/mmath"
 
 type Point struct {
 	X, Y int

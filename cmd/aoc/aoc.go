@@ -4,34 +4,34 @@ import (
 	"fmt"
 	"os"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/printer"
+	"gitlab.com/leononame/advent-of-code/pkg/printer"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day01"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day02"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day03"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day04"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day05"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day06"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day07"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day08"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day09"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day10"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day11"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day12"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day13"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day14"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day15"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day16"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day17"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day18"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day19"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day20"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day21"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day22"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day23"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day24"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc/2018/day25"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day01"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day02"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day03"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day04"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day05"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day06"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day07"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day08"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day09"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day10"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day11"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day12"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day13"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day14"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day15"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day16"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day17"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day18"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day19"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day20"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day21"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day22"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day23"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day24"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc/2018/day25"
 )
 
 func main() {
@@ -66,12 +66,14 @@ func RunAll(config *aoc.Config) {
 		if ch == nil {
 			continue
 		}
+		fmt.Printf("\rRunning year %d day %02d", config.Year, i)
 		config.Day = i
 		config.SetToDefaultFilePath()
 		config.ReadFile()
 		result := ch(config)
 		p.AppendResult(result, config.Year, i)
 	}
+	fmt.Printf("\r")
 	p.Flush()
 }
 

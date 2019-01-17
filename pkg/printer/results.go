@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/olekukonko/tablewriter"
-	"gitlab.com/leononame/advent-of-code-2018/pkg/aoc"
+	"gitlab.com/leononame/advent-of-code/pkg/aoc"
 )
 
 type Printer struct {

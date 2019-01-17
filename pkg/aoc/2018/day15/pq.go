@@ -1,6 +1,6 @@
 package day15
 
-import "gitlab.com/leononame/advent-of-code-2018/pkg/geo"
+import "gitlab.com/leononame/advent-of-code/pkg/geo"
 
 type Item struct {
 	pos      geo.Point

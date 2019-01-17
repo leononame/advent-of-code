@@ -3,7 +3,7 @@ package day15
 import (
 	"container/heap"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
+	"gitlab.com/leononame/advent-of-code/pkg/geo"
 )
 
 func (t *target) path(from geo.Point, max int) {

@@ -3,7 +3,7 @@ package day15
 import (
 	"github.com/pkg/errors"
 
-	"gitlab.com/leononame/advent-of-code-2018/pkg/geo"
+	"gitlab.com/leononame/advent-of-code/pkg/geo"
 )
 
 type unit struct {

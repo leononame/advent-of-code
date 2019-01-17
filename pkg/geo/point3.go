@@ -1,6 +1,6 @@
 package geo
 
-import "gitlab.com/leononame/advent-of-code-2018/pkg/mmath"
+import "gitlab.com/leononame/advent-of-code/pkg/mmath"
 
 // Point3 is a classic implementation of Pointer3 using X, Y and Z
 type Point3 struct {
