@@ -1,7 +1,9 @@
 package day05
 
 import (
+	"runtime"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/logrusorgru/aurora"
@@ -28,7 +30,7 @@ func Run(c *aoc.Config) (result aoc.Result) {
 }
 
 func part1(polymer string) int {
-	l := react(polymer)
+	l, _ := reactParallel([]byte(polymer))
 	logger.Debugf("Reaction finished. Polymer of length %d is now of length %d.", aurora.Red(len(polymer)), aurora.Green(l))
 	return l
 }
@@ -38,7 +40,7 @@ func part2(polymer string) int {
 	badChar := "a"
 	for i := 0x41; i < 0x5B; i++ {
 		cleaned := removeChar(polymer, i)
-		length := react(cleaned)
+		length, _ := reactParallel([]byte(cleaned))
 		if length < min {
 			min = length
 			badChar = string(i)
@@ -54,8 +56,42 @@ func removeChar(s string, c int) string {
 	return strings.Replace(tmp, string(c+0x20), "", -1)
 }
 
-func react(polymer string) int {
-	data := []byte(polymer)
+func reactParallel(data []byte) (int, []byte) {
+	// Turn into NumCPU (or NumCPU+1) batches for parallel processing
+	batchSize := len(data) / runtime.NumCPU()
+	var batches [][]byte
+	for batchSize < len(data) {
+		data, batches = data[batchSize:], append(batches, data[0:batchSize:batchSize])
+	}
+	batches = append(batches, data)
+	// waitgroup
+	var wg sync.WaitGroup
+	wg.Add(len(batches))
+	// React each batch in parallel
+	for i := range batches {
+		go func(i int) {
+			defer wg.Done()
+			for {
+				l := len(batches[i])
+				_, batches[i] = react(batches[i])
+				if len(batches[i]) == l {
+					return
+				}
+			}
+		}(i)
+	}
+	wg.Wait()
+	// Merge data
+	data = data[:0]
+	for _, batch := range batches {
+		data = append(data, batch...)
+	}
+	// React the merged polymer
+	_, data = react(data)
+	return len(data), data
+}
+
+func react(data []byte) (int, []byte) {
 	l := len(data)
 	for {
 		for i := 1; i < len(data); i++ {
@@ -68,5 +104,5 @@ func react(polymer string) int {
 		}
 		l = len(data)
 	}
-	return l
+	return l, data
 }
