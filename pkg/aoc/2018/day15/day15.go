@@ -30,19 +30,38 @@ func Run(config *aoc.Config) (result aoc.Result) {
 }
 
 func part2(input []string) int {
-	// pow := 20
-	for pow := 4; ; pow++ {
+	// binary search
+	// this one's a little lazy and often has to hit the correct target more
+	// than once to actually find the solution. This is needed because we return
+	// the outcome as return value and I didn't feel like setting up a huge
+	// hash table or solution slice for lookups
+	radius := 10
+	pow := 10
+	for {
 		logger.Debug("Trying attack power ", pow)
 		c := parse(input)
+		// set power
 		for _, e := range c.elves {
 			e.pow = pow
 		}
 		nelves := len(c.elves)
 		outcome := part1(c)
-		if nelves-len(c.elves) == 0 {
+		win := nelves-len(c.elves) == 0
+
+		if !win {
+			pow += radius
+			continue
+		}
+		if radius == 1 {
 			logger.Debug("Elves have not lost any unit with attack power ", pow)
 			return outcome
 		}
+
+		radius /= 2
+		if radius == 0 {
+			radius = 1
+		}
+		pow -= radius
 	}
 }
 
