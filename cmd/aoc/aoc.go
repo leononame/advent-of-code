@@ -69,7 +69,11 @@ func RunAll(config *aoc.Config) {
 		fmt.Printf("\rRunning year %d day %02d", config.Year, i)
 		config.Day = i
 		config.SetToDefaultFilePath()
-		config.ReadFile()
+		if err := config.ReadFile(); err != nil {
+			fmt.Printf("\r")
+			config.Logger.Errorf("Year %d, Day %d, cannot read input file: %s", config.Year, i, err.Error())
+			continue
+		}
 		result := ch(config)
 		p.AppendResult(result, config.Year, i)
 	}
