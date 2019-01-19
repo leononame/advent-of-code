@@ -1,6 +1,7 @@
 package aoc
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -16,6 +17,20 @@ type Result struct {
 	Solution2 interface{}
 }
 
+const usage = `Usage: aoc [-ahv] [-d 25] [-y 2018] [-i input/2018/day03] [subcommand]
+ -a, --all        Run all challenges of a given year. Incompatible with options -d and -v.
+ -d, --day=25     Select the day, defaults to the latest challenge
+ -y, --year=2018  Select the year, defaults to the latest challenge
+ -i, --input=input/2018/day03
+                  Specify path to the input file, defaults to 'input/%year/day%day'
+                  e.g. input/2018/day25
+ -h, --help       Show help
+ -v, --verbose    Log more information`
+
+func printUsage() {
+	fmt.Println(usage)
+}
+
 func Setup() *Config {
 	verbose := getopt.BoolLong("verbose", 'v', "Log more information")
 	help := getopt.BoolLong("help", 'h', "Show help")
@@ -23,6 +38,7 @@ func Setup() *Config {
 	year := getopt.IntLong("year", 'y', CurrentYear, "Select the year, defaults to the latest challenge", "2018")
 	day := getopt.IntLong("day", 'd', CurrentChallenge, "Select the day, defaults to the latest challenge", "25")
 	all := getopt.BoolLong("all", 'a', "Run all challenges of a given year", "true")
+	getopt.SetUsage(printUsage)
 	getopt.Parse()
 
 	logger := logrus.New()
@@ -35,11 +51,15 @@ func Setup() *Config {
 	}
 
 	if *help {
-		getopt.PrintUsage(os.Stdout)
+		printUsage()
 		os.Exit(0)
 	}
 	if *all && getopt.IsSet("day") {
 		logger.Error("Option -a/--all can't be combined with option -d/--day.")
+		os.Exit(1)
+	}
+	if *all && *verbose {
+		logger.Error("Option -a/--all can't be combined with option -v/--verbose.")
 		os.Exit(1)
 	}
 
